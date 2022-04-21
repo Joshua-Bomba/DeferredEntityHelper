@@ -29,13 +29,14 @@ namespace DeferredEntityHelper.IndexedCachedModels
                 if (_cacheSets.Any())
                 {
                     IEntityCacheIndexed<T> otherSet = _cacheSets.First().Value;
-                    ecs.SetupCacheFromRelated(otherSet);
+                    await ecs.SetupCacheFromRelated(otherSet);
                 }
                 else
                 {
+                    _cacheSets[keyType] = ecs;
                     await ecs.SetupCacheSetFromDb(_dbContext);
                 }
-                _cacheSets[keyType] = ecs;
+                
             }
             else
             {

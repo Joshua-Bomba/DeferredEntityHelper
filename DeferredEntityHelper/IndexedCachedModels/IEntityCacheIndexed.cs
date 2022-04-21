@@ -10,8 +10,8 @@ namespace DeferredEntityHelper.IndexedCachedModels
     public interface IEntityCacheIndexed<T> where T : class
     {
         void Add(T entity);
-        Task SetupCacheSetFromDb(DbContext context);
-        void SetupCacheFromRelated(IEntityCacheIndexed<T> relatedSet);
-        IEnumerable<T> GetData();
+        ValueTask SetupCacheSetFromDb(DbContext context);
+        ValueTask SetupCacheFromRelated(IEntityCacheIndexed<T> relatedSet);
+        IAsyncEnumerable<T> GetData();
     }
 }

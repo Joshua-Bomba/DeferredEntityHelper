@@ -12,11 +12,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
         public static async ValueTask<TValue?> AtKey<TKey,TValue>(this ValueTask<ICachedModelAccess<TKey, TValue>> a, TKey key) where TKey : notnull where TValue : class
         {
             ICachedModelAccess<TKey, TValue> c = await a;
-            if(c != null&& c.ContainsKey(key))
-            {
-                return c[key];
-            }
-            return null;
+            return await c.AtKey(key);
         }
     }
 }
