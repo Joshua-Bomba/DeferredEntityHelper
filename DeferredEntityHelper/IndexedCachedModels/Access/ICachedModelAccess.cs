@@ -6,8 +6,5 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.IndexedCachedModels
 {
-    public interface ICachedModelAccess<TKey,TValue> : IDictionary<TKey, TValue> where TKey : notnull where TValue : class 
-    {
-
-    }
+    public interface ICachedModelAccess<TKey,TValue> : IDictionary<TKey, TValue> where TKey : notnull where TValue : class {}
 }
