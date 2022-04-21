@@ -1,4 +1,5 @@
 ﻿using DeferredEntityHelper.DataBaseFutures;
+using DeferredEntityHelper.IndexedCachedModels;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,10 +13,12 @@ namespace DeferredEntityHelper
     {
         protected T _context;
         private HashSet<IDatabaseFuture> _def;
+        protected EntityCacheManager _cacheManager;
         public BaseEntityHelper(T context)
         {
             _context = context;
             _def = new HashSet<IDatabaseFuture>();
+            _cacheManager = new EntityCacheManager(_context);
         }
 
         public virtual async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(Func<Task<PotentialFuture<TProp>>> a, params IFuture[] wait) where TProp : class
@@ -37,6 +40,7 @@ namespace DeferredEntityHelper
             await this._context.Set<TProp>().AddAsync(e);
             DatabaseFutureDetermined<TProp> save = new DatabaseFutureDetermined<TProp>(e, actionPostSave, this);
             _def.Add(save);
+            _cacheManager.Add(save);
             return save;
         }
 
