@@ -18,7 +18,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _dbContext = context;
         }
 
-        public async Task<IDictionary<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer) where TKey : notnull
+        public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer) where TKey : notnull
         {
             Type keyType = typeof(TKey);
 
@@ -26,21 +26,24 @@ namespace DeferredEntityHelper.IndexedCachedModels
             if (!_cacheSets.ContainsKey(keyType))
             {
                 ecs = new EntityCacheIndexed<T, TKey>(indexer);
-                if (_cacheSets.Any())
+                bool anyCacheSets = _cacheSets.Any();
+                _cacheSets[keyType] = ecs;
+                if (anyCacheSets)
                 {
                     IEntityCacheIndexed<T> otherSet = _cacheSets.First().Value;
                     ecs.SetupCacheFromRelated(otherSet);
                 }
                 else
                 {
-                    await ecs.SetupCacheSetFromDb(_dbContext);
+                    ecs.SetupCacheSetFromDb(_dbContext);
                 }
-                _cacheSets[keyType] = ecs;
+
             }
             else
             {
                 ecs = (EntityCacheIndexed<T, TKey>)_cacheSets[keyType];
             }
+            await ecs.Finished();
             return ecs;
         }
 
