@@ -20,14 +20,23 @@ namespace DeferredEntityHelperSample.EntityHelpers
 
         async Task<PotentialFuture<Model1>> IModel1Helper.CreateModel1(string somethingUnique, PotentialFuture<Model4> model4)
         {
+            //This WaitForPromises will wait till the PotentialFutures passed in the arguments list are resolved
+            //in which case it will call the function pointer
+            //we pass in the model4 potential future and will wait till that is ready
+            //This will return a DatabaseFutureUnDetermined which does not have any information about the Model yet
             return await this.WaitForPromises<Model1>(async () =>
             {
+                //this get results will call SaveChanges if the PotentialFuture is not Resolved
+                //it should be resolved since we passed it into the WaitForPromise method
                 Model4 model4Real = await model4.GetResult();
+
+                //Now that Model4 is resolved we have the ID
                 Model1 model1 = new Model1
                 {
                     SomethingUnique = somethingUnique,
-                    Model4 = model4Real
+                    Model4Id = model4Real.Id
                 };
+                //let's add the entity
                 return await this.AddEntityAsync(model1);
             },model4);
         }

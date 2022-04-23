@@ -12,6 +12,8 @@ namespace DeferredEntityHelperSample.Models
 
         public string Type { get; set; }
 
+        public string? ASecondValue { get; set; }
+
         public virtual List<Model1> Model1s { get; set; }
     }
 }

@@ -39,8 +39,20 @@ namespace DeferredEntityHelperSample
             {
                 await using(EntityHelper eh = new EntityHelper(context))
                 {
-                    PotentialFuture<Model4> m4 = await eh.Model4Helper.CreateModel4IfItDoesNotExist("Test");
+                    //returns a DatabaseFutureDetermined
+                    PotentialFuture<Model4> m4 = await eh.Model4Helper.CreateModel4IfItDoesNotExist("Test","valueThatWillBeModified");
+
+                    //with a DatabaseFutureDetermined you can call GetUnresolvedItem and modify stuff. the ID will not be generated yet but you can still modifiy stuff if it's
+                    //not saved
+                    Model4 modifyM4 = m4.GetUnresolvedItem();
+                    modifyM4.ASecondValue = "I'm Gonna Change This Before We save";
+
+                    //returns a DatabaseFutureUnDetermined
                     PotentialFuture<Model1> m1 = await eh.Model1Helper.CreateModel1("IDK Something Unique", m4);
+                    //The DatabaseFutureUnDetermined does not have any information about the Model1
+                    //it's not created yet
+                    //the GetUnresolvedItem() will return null
+
                     PotentialFuture<Model3> m3 = await eh.Model3Helper.CreateModel2AndModel3("Idk SomethingElse", m1);
                 }
             }
