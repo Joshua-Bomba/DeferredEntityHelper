@@ -1,4 +1,5 @@
-﻿using DeferredEntityHelperSample.EntityHelpers;
+﻿using DeferredEntityHelper.DataBaseFutures;
+using DeferredEntityHelperSample.EntityHelpers;
 using DeferredEntityHelperSample.Models;
 using NUnit.Framework;
 using System;
@@ -38,7 +39,9 @@ namespace DeferredEntityHelperSample
             {
                 await using(EntityHelper eh = new EntityHelper(context))
                 {
-
+                    PotentialFuture<Model4> m4 = await eh.Model4Helper.CreateModel4IfItDoesNotExist("Test");
+                    PotentialFuture<Model1> m1 = await eh.Model1Helper.CreateModel1("IDK Something Unique", m4);
+                    PotentialFuture<Model3> m3 = await eh.Model3Helper.CreateModel2AndModel3("Idk SomethingElse", m1);
                 }
             }
         }
