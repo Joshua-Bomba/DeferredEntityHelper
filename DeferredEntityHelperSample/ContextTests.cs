@@ -58,11 +58,35 @@ namespace DeferredEntityHelperSample
             }
         }
 
+        private async ValueTask TestCache()
+        {
+            using(SampleContext context = new SampleContext())
+            {
+                //Let's Added type 
+                await using(EntityHelper eh = new EntityHelper(context))
+                {
+                    PotentialFuture<Model4> test = await eh.Model4Helper.CreateModel4IfItDoesNotExist("Test", "A Second Value");
+                }
+                //it'll save
+                await using(EntityHelper eh = new EntityHelper(context))
+                {
+                    //Since it's already in our database it should fetch that one
+                    PotentialFuture<Model4> test1 = await eh.Model4Helper.CreateModel4IfItDoesNotExist("Test", "A Second Value");
+
+                    //Now that the cache is loaded it should be quicker
+                    PotentialFuture<Model4> test2 = await eh.Model4Helper.CreateModel4IfItDoesNotExist("Test", "A Second Value");
+                }
+
+
+            }
+        }
+
 
         [Test]
-        public void EntityHelperTest()
-        {
-            TestEntityHelper().GetAwaiter().GetResult();
-        }
+        public void EntityHelperTest() => TestEntityHelper().GetAwaiter().GetResult();
+        [Test]
+        public void CacheTest() => TestCache().GetAwaiter().GetResult();
+
+
     }
 }
