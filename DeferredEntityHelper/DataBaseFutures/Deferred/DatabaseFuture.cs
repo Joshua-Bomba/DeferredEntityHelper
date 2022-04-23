@@ -18,8 +18,6 @@ namespace DeferredEntityHelper.DataBaseFutures
 
         public override bool Resolved => _resolved;
 
-        void IDatabaseFuture.SavedChangesTriggered() => _resolved = true;
-
         public override async Task<T> GetResult()
         {
             if (!_resolved)

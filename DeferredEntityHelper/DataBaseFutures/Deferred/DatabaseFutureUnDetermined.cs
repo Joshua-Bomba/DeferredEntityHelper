@@ -30,6 +30,7 @@ namespace DeferredEntityHelper.DataBaseFutures
                 if (_next.Resolved)
                 {
                     _data = await _next.GetResult();
+                    _resolved = true;
                 }
                 else
                 {
