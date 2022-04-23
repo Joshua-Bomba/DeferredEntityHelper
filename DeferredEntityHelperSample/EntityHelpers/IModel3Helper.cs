@@ -30,7 +30,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
             return await this.AddEntityAsync(m3, async x =>
             {
                 //Once Model3 is resolve we will wait for the PotentailFuture passed in
-                //it should be already resolved so it should call the Function pointer right away
+                //it might be possible that one SaveChances has resolved it
                 await this.WaitForPromises<Model2>(async () =>
                 {
                     //Will Get the Resolved Model1
