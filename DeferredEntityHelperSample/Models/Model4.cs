@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DeferredEntityHelperSample.Models
 {
     public class Model4
-    {
+    { 
         public int Id { get; set; }
 
         public string Type { get; set; }
