@@ -40,7 +40,7 @@ namespace DeferredEntityHelper
             await this._context.Set<TProp>().AddAsync(e);
             DatabaseFutureDetermined<TProp> save = new DatabaseFutureDetermined<TProp>(e, actionPostSave, this);
             _def.Add(save);
-            _cacheManager.Add(save);
+            _cacheManager.Add(e);
             return save;
         }
 
