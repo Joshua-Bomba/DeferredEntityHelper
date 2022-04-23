@@ -26,6 +26,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             if (!_cacheSets.ContainsKey(keyType))
             {
                 ecs = new EntityCacheIndexed<T, TKey>(indexer);
+                _cacheSets[keyType] = ecs;
                 if (_cacheSets.Any())
                 {
                     IEntityCacheIndexed<T> otherSet = _cacheSets.First().Value;
@@ -33,9 +34,9 @@ namespace DeferredEntityHelper.IndexedCachedModels
                 }
                 else
                 {
-                    await ecs.SetupCacheSetFromDb(_dbContext);
+                    ecs.SetupCacheSetFromDb(_dbContext);
                 }
-                _cacheSets[keyType] = ecs;
+                await ecs.Finished();
             }
             else
             {
