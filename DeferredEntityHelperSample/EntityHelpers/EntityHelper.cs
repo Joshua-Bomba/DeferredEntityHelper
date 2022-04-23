@@ -8,11 +8,8 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelperSample.EntityHelpers
 {
-    public class EntityHelper : BaseEntityHelper<SampleContext>
+    public partial class EntityHelper : BaseEntityHelper<SampleContext>
     {
-        public EntityHelper() : base(new SampleContext())
-        {
-
-        }
+        public EntityHelper(SampleContext context) : base(context) { }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DeferredEntityHelperSample.Models;
+﻿using DeferredEntityHelperSample.EntityHelpers;
+using DeferredEntityHelperSample.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,25 @@ namespace DeferredEntityHelperSample
                 Model3[] d3= context.Model3s.ToArray();
                 Model4[] d4= context.Model4s.ToArray();
             }
+        }
+
+
+        private async ValueTask TestEntityHelper()
+        {
+            using(SampleContext context = new SampleContext())
+            {
+                await using(EntityHelper eh = new EntityHelper(context))
+                {
+
+                }
+            }
+        }
+
+
+        [Test]
+        public void EntityHelperTest()
+        {
+            TestEntityHelper().GetAwaiter().GetResult();
         }
     }
 }
