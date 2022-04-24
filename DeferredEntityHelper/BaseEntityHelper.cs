@@ -47,6 +47,7 @@ namespace DeferredEntityHelper
         public virtual async Task SaveChangesAsync()
         {
             HashSet<IDatabaseFuture> refs;
+            await _cacheManager.EnsureReadersAreFinished();
             do
             {
                 await _context.SaveChangesAsync();
