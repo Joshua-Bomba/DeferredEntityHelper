@@ -7,21 +7,24 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.IndexedCachedModels
 {
-    public interface IEntityCacheManagerContextTracking
+    
+    public interface IEntityCacheManager
     {
-        void EnqueContextTask(ValueTask v);
+        IEntityCacheData<TProp> DbDataFetch<TProp>() where TProp : class;
     }
 
-    public class EntityCacheManager : IEntityCacheManagerContextTracking
+    public class EntityCacheManager : IEntityCacheManager
     {
         private Dictionary<Type, IEntityCache> _cachedItems;
         private DbContext _context;
-        private List<ValueTask> _contextTasks;
+        private ILoadFromDataBase? _loadFromDataBase;
+        private ValueTask? _finish;
         public EntityCacheManager(DbContext context)
         {
             _context = context;
             _cachedItems = new Dictionary<Type, IEntityCache>();
-            _contextTasks = new List<ValueTask>();
+            _loadFromDataBase = null;
+            _finish = null;
         }
         public virtual async ValueTask<ICachedModelAccess<TKey, TValue>> GetCachedIndexedDictionary<TKey, TValue>(Func<TValue, TKey> indexer) where TValue : class where TKey : notnull
         {
@@ -29,7 +32,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             EntityCache<TValue> ec;
             if (!_cachedItems.ContainsKey(tValType))
             {
-                ec = new EntityCache<TValue>(_context,this);
+                ec = new EntityCache<TValue>(this);
                 _cachedItems[tValType] = ec;
             }
             else
@@ -51,17 +54,25 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public async ValueTask EnsureReadersAreFinished()
         {
-            if (_contextTasks.Any())
+            if(_finish != null)
             {
-                foreach (ValueTask task in _contextTasks)
-                {
-                    await task;
-                }
-                _contextTasks.Clear();
+                await _finish.Value;
             }
-
         }
 
-        void IEntityCacheManagerContextTracking.EnqueContextTask(ValueTask v) => _contextTasks.Add(v);
+        IEntityCacheData<TProp> IEntityCacheManager.DbDataFetch<TProp>()
+        {
+            LoadFromDataBase<TProp> loadRequest = new LoadFromDataBase<TProp>();
+            if(_loadFromDataBase == null)
+            {
+                _loadFromDataBase = loadRequest;
+                _finish = loadRequest.Process(_context);
+            }
+            else
+            {
+                _loadFromDataBase.Stack(loadRequest);
+            }
+            return loadRequest;
+        }
     }
 }

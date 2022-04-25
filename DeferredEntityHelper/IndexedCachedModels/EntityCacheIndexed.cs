@@ -16,27 +16,12 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _keyGetter = keyGetter;
         }
 
-        private async ValueTask _SetupTask(DbContext context)
-        {
-            IAsyncEnumerator<TModel> en = context.Set<TModel>().GetAsyncEnumerator();
-            while (await en.MoveNextAsync())
-            {
-                this[_keyGetter(en.Current)] = en.Current;
-            }
-        }
-
-        public ValueTask SetupCacheSetFromDb(DbContext context)
-        {
-            _setupTask = _SetupTask(context);
-            return _setupTask;
-        }
-
         public void Add(TModel entity)
         {
             this[_keyGetter(entity)] = entity;
         }
 
-        private async ValueTask _SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
+        private async ValueTask _SetupCacheFromRelated(IEntityCacheData<TModel> relatedSet)
         {
             await relatedSet.Finished();
             foreach (TModel entity in relatedSet.GetData())
@@ -45,7 +30,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             }
         }
 
-        public void SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
+        public void SetupCache(IEntityCacheData<TModel> relatedSet)
             => _setupTask = _SetupCacheFromRelated(relatedSet);
 
         public IEnumerable<TModel> GetData() => this.Values;
