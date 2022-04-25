@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DeferredEntityHelper.DataBaseFutures;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _cacheManager = cacheManager;
         }
 
-        public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer) where TKey : notnull
+        public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<PotentialFuture<T>, TKey> indexer) where TKey : notnull
         {
             Type keyType = typeof(TKey);
 
@@ -48,11 +49,11 @@ namespace DeferredEntityHelper.IndexedCachedModels
             return ecs;
         }
 
-        public void Add(object t)
+        public void Add(IFuture t)
         {
             if (_cacheSets.Any())
             {
-                T prop = (T)t;
+                PotentialFuture<T> prop = (PotentialFuture<T>)t;
                 foreach (KeyValuePair<Type, IEntityCacheIndexed<T>> kv in _cacheSets)
                 {
                     kv.Value.Add(prop);

@@ -37,9 +37,9 @@ namespace DeferredEntityHelper
 
         public virtual async Task<DatabaseFutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
         {
-            _cacheManager.Add(e);
             DatabaseFutureDetermined<TProp> save = new DatabaseFutureDetermined<TProp>(e, actionPostSave, this);
             _def.Add(save);
+            _cacheManager.Add(save);
             await this._context.Set<TProp>().AddAsync(e);
             return save;
         }

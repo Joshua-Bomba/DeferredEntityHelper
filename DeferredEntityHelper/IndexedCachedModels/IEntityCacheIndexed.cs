@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DeferredEntityHelper.DataBaseFutures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
 {
     public interface IEntityCacheIndexed<T> : IEntityCacheData<T> where T : class
     {
-        void Add(T entity);
+        void Add(PotentialFuture<T> entity);
         void SetupCache(IEntityCacheData<T> set);
     }
 }

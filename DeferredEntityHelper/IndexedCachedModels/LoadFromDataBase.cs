@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DeferredEntityHelper.DataBaseFutures;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,13 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public async ValueTask Finished() => await _taskCompletionSource.Task;
 
-        public IEnumerable<T> GetData() => _data;
+        public IEnumerable<PotentialFuture<T>> GetData()
+        {
+            foreach(T d in _data)
+            {
+                yield return d;
+            }
+        }
 
         public async ValueTask Process(DbContext context)
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DeferredEntityHelper.DataBaseFutures;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace DeferredEntityHelper.IndexedCachedModels
     public interface IEntityCacheData<T> where T : class
     {
         ValueTask Finished();
-        IEnumerable<T> GetData();
+        IEnumerable<PotentialFuture<T>> GetData();
     }
 }
