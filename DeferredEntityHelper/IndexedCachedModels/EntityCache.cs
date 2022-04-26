@@ -11,11 +11,15 @@ namespace DeferredEntityHelper.IndexedCachedModels
     {
         private Dictionary<Type, IEntityCacheIndexed<T>> _cacheSets;
         private IEntityCacheManager _cacheManager;
+        private bool _resolved;
+
+        public bool Resolved => _resolved;
 
         public EntityCache(IEntityCacheManager cacheManager)
         {
             _cacheSets = new Dictionary<Type, IEntityCacheIndexed<T>>();
             _cacheManager = cacheManager;
+            _resolved = true;
         }
 
         public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer) where TKey : notnull

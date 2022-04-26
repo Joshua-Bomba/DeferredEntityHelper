@@ -30,7 +30,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public async ValueTask Process(DbContext context)
         {
-            _data = await context.Set<T>().ToArrayAsync();
+            _data = await context.Set<T>().AsNoTracking().ToArrayAsync();
             _taskCompletionSource.SetResult();
             if(_stack != null)
             {
