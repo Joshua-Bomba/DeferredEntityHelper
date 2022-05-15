@@ -22,7 +22,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public void Add(PotentialFuture<TModel> entity)
         {
-            if (entity.Resolved)
+            if (entity.Resolved || entity is DatabaseFutureDetermined<TModel>)
             {
                 TModel m = entity.GetCurrentItem();
                 this[_keyGetter(m)] = entity;
