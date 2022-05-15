@@ -10,16 +10,27 @@ namespace DeferredEntityHelper.IndexedCachedModels
 {
     public class EntityCacheIndexed<TModel, TModelAccessKey> : Dictionary<TModelAccessKey, PotentialFuture<TModel>>, IEntityCacheIndexed<TModel>, ICachedModelAccess<TModelAccessKey, TModel> where TModel : class where TModelAccessKey : notnull
     {
-        private Func<PotentialFuture<TModel>, TModelAccessKey> _keyGetter;
+        private Func<TModel, TModelAccessKey> _keyGetter;
+        private Dictionary<TModelAccessKey, PotentialFuture<TModel>> _cache;
+        private List<PotentialFuture<TModel>> _unresolved;
         private ValueTask _setupTask;
-        public EntityCacheIndexed(Func<PotentialFuture<TModel>, TModelAccessKey> keyGetter) : base()
+        public EntityCacheIndexed(Func<TModel, TModelAccessKey> keyGetter) : base()
         {
             _keyGetter = keyGetter;
+            _unresolved = new List<PotentialFuture<TModel>>();
         }
 
         public void Add(PotentialFuture<TModel> entity)
         {
-            this[_keyGetter(entity)] = entity;
+            if (entity.Resolved)
+            {
+                TModel m = entity.GetCurrentItem();
+                this[_keyGetter(m)] = entity;
+            }
+            else
+            {
+                _unresolved.Add(entity);
+            }
         }
 
         private async ValueTask _SetupCacheFromRelated(IEntityCacheData<TModel> relatedSet)
@@ -27,7 +38,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             await relatedSet.Finished();
             foreach (PotentialFuture<TModel> entity in relatedSet.GetData())
             {
-                this[_keyGetter(entity)] = entity;
+                this.Add(entity);
             }
         }
 

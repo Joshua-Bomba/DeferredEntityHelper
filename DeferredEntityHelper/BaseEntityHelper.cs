@@ -23,7 +23,7 @@ namespace DeferredEntityHelper
 
         public virtual async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(Func<Task<PotentialFuture<TProp>>> a, params IFuture[] wait) where TProp : class
         {
-            IDatabaseFuture[] def = wait.Where(x => !x.Resolved && x is IDatabaseFuture).Cast<IDatabaseFuture>().ToArray();
+            IDatabaseFuture[] def = wait.Where(x => x != null&& !x.Resolved && x is IDatabaseFuture).Cast<IDatabaseFuture>().ToArray();
             if (def.Any())
             {
                 DatabaseFuture<TProp> save = new DatabaseFutureUnDetermined<TProp>(def, a, this);

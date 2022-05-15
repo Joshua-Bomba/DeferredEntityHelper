@@ -21,27 +21,32 @@ namespace DeferredEntityHelperSample.EntityHelpers
         async Task<PotentialFuture<Model4>> IModel4Helper.CreateModel4IfItDoesNotExist(string type, string secondValue)
         {
             //First we check if the item is in the DataBase
-            Model4? m4 = await this._cacheManager.GetCachedIndexedDictionary<string,Model4>(x=>x.Type).AtKey(type);
-            if(m4 == null)
+            PotentialFuture<Model4> m4t= await this._cacheManager.GetCachedIndexedDictionary<string,Model4>(x=>x.Type).AtKey(type);
+            return await this.WaitForPromises<Model4>(async () =>
             {
-                //if it does not exist we will create the Model
-                m4 = new Model4
+                Model4 m4 = m4t?.GetCurrentItem();
+                if (m4 == null)
                 {
-                    Type = type,
-                    ASecondValue = secondValue
-                };
+                    //if it does not exist we will create the Model
+                    m4 = new Model4
+                    {
+                        Type = type,
+                        ASecondValue = secondValue
+                    };
 
-                //Adds it to the Context.
-                //this will wrap it in a DatabaseFutureDetermined
-                //this means we have access to the object via the GetUnresolvedItem() method
-                //this means we could pass this into something else and it can modify it before SaveChanges is called
-                return await this.AddEntityAsync(m4);
+                    //Adds it to the Context.
+                    //this will wrap it in a DatabaseFutureDetermined
+                    //this means we have access to the object via the GetUnresolvedItem() method
+                    //this means we could pass this into something else and it can modify it before SaveChanges is called
+                    return await this.AddEntityAsync(m4);
 
-            }
-            else
-            {
-                return m4;//If it exists we can return it and it will implicity wrap it in a PotentialFuture that is already resolved
-            }
+                }
+                else
+                {
+                    return m4;//If it exists we can return it and it will implicity wrap it in a PotentialFuture that is already resolved
+                }
+            },m4t);
+            
         }
     }
 }

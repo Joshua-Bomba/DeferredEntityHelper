@@ -14,7 +14,7 @@ namespace DeferredEntityHelper.DataBaseFutures
             _data = data;
         }
 
-        public T GetUnresolvedItem()
+        public T GetCurrentItem()
         {
             return _data;
         }

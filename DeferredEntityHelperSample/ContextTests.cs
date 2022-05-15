@@ -13,6 +13,7 @@ namespace DeferredEntityHelperSample
     [TestFixture]
     public class ContextTests
     {
+        [Order (1)]
         [Test]
         public void InitInMemoryContext()
         {
@@ -44,7 +45,7 @@ namespace DeferredEntityHelperSample
 
                     //with a DatabaseFutureDetermined you can call GetUnresolvedItem and modify stuff. the ID will not be generated yet but you can still modifiy stuff if it's
                     //not saved
-                    Model4 modifyM4 = m4.GetUnresolvedItem();
+                    Model4 modifyM4 = m4.GetCurrentItem();
                     modifyM4.ASecondValue = "I'm Gonna Change This Before We save";
 
                     //returns a DatabaseFutureUnDetermined
@@ -81,9 +82,10 @@ namespace DeferredEntityHelperSample
             }
         }
 
-
+        [Order(2)]
         [Test]
         public void EntityHelperTest() => TestEntityHelper().GetAwaiter().GetResult();
+        [Order(3)]
         [Test]
         public void CacheTest() => TestCache().GetAwaiter().GetResult();
 
