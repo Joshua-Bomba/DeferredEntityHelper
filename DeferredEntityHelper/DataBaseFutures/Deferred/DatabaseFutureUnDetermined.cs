@@ -29,7 +29,7 @@ namespace DeferredEntityHelper.DataBaseFutures
             {
                 if (_next.Resolved)
                 {
-                    _data = await _next.GetResult();
+                    _data = _next.GetItem();
                     _resolved = true;
                 }
                 else
@@ -53,7 +53,7 @@ namespace DeferredEntityHelper.DataBaseFutures
                 }
                 else
                 {
-                    _data = await p.GetResult();
+                    _data =p.GetItem();
                     _resolved = true;
                 }
             }

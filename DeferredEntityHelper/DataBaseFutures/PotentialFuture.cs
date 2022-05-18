@@ -14,14 +14,14 @@ namespace DeferredEntityHelper.DataBaseFutures
             _data = data;
         }
 
-        public T GetUnresolvedItem()
+        public T GetItem()
         {
             return _data;
         }
 
         public virtual bool Resolved => true;
 
-        public virtual async Task<T> GetResult() => _data;
+        public virtual async Task<T> ForceResolveAndGetItem() => _data;
 
         public static implicit operator PotentialFuture<T>(T t) => new PotentialFuture<T>(t);
 

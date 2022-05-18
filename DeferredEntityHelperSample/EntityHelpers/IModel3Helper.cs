@@ -34,7 +34,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
                 await this.WaitForPromises<Model2>(async () =>
                 {
                     //Will Get the Resolved Model1
-                    Model1 m1 = await pm1.GetResult();
+                    Model1 m1 = pm1.GetItem();
                     
                     //Now we can create Model2 with the 2 diffrent id
                     Model2 m2 = new Model2

@@ -28,7 +28,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
             {
                 //this get results will call SaveChanges if the PotentialFuture is not Resolved
                 //it should be resolved since we passed it into the WaitForPromise method
-                Model4 model4Real = await model4.GetResult();
+                Model4 model4Real = model4.GetItem();
 
                 //Now that Model4 is resolved we have the ID
                 Model1 model1 = new Model1

@@ -18,7 +18,7 @@ namespace DeferredEntityHelper.DataBaseFutures
 
         public override bool Resolved => _resolved;
 
-        public override async Task<T> GetResult()
+        public override async Task<T> ForceResolveAndGetItem()
         {
             if (!_resolved)
             {
