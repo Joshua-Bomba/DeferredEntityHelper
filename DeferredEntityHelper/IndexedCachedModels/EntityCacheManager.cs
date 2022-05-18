@@ -7,14 +7,21 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.IndexedCachedModels
 {
-    public class EntityCacheManager
+    public interface IEntityCacheManagerContextTracking
+    {
+        void EnqueContextTask(ValueTask v);
+    }
+
+    public class EntityCacheManager : IEntityCacheManagerContextTracking
     {
         private Dictionary<Type, IEntityCache> _cachedItems;
         private DbContext _context;
+        private List<ValueTask> _contextTasks;
         public EntityCacheManager(DbContext context)
         {
             _context = context;
             _cachedItems = new Dictionary<Type, IEntityCache>();
+            _contextTasks = new List<ValueTask>();
         }
         public virtual async ValueTask<ICachedModelAccess<TKey, TValue>> GetCachedIndexedDictionary<TKey, TValue>(Func<TValue, TKey> indexer) where TValue : class where TKey : notnull
         {
@@ -22,7 +29,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             EntityCache<TValue> ec;
             if (!_cachedItems.ContainsKey(tValType))
             {
-                ec = new EntityCache<TValue>(_context);
+                ec = new EntityCache<TValue>(_context,this);
                 _cachedItems[tValType] = ec;
             }
             else
@@ -42,5 +49,19 @@ namespace DeferredEntityHelper.IndexedCachedModels
             }
         }
 
+        public async ValueTask EnsureReadersAreFinished()
+        {
+            if (_contextTasks.Any())
+            {
+                foreach (ValueTask task in _contextTasks)
+                {
+                    await task;
+                }
+                _contextTasks.Clear();
+            }
+
+        }
+
+        void IEntityCacheManagerContextTracking.EnqueContextTask(ValueTask v) => _contextTasks.Add(v);
     }
 }

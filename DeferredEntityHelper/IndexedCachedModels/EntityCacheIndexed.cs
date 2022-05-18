@@ -25,8 +25,11 @@ namespace DeferredEntityHelper.IndexedCachedModels
             }
         }
 
-        public void SetupCacheSetFromDb(DbContext context)
-            => _setupTask = _SetupTask(context);
+        public ValueTask SetupCacheSetFromDb(DbContext context)
+        {
+            _setupTask = _SetupTask(context);
+            return _setupTask;
+        }
 
         public void Add(TModel entity)
         {

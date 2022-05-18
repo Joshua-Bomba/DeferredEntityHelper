@@ -11,11 +11,13 @@ namespace DeferredEntityHelper.IndexedCachedModels
     {
         private Dictionary<Type, IEntityCacheIndexed<T>> _cacheSets;
         private DbContext _dbContext;
+        private IEntityCacheManagerContextTracking _contextTracking;
 
-        public EntityCache(DbContext context)
+        public EntityCache(DbContext context, IEntityCacheManagerContextTracking contextTracking)
         {
             _cacheSets = new Dictionary<Type, IEntityCacheIndexed<T>>();
             _dbContext = context;
+            _contextTracking = contextTracking;
         }
 
         public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer) where TKey : notnull
@@ -35,7 +37,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
                 }
                 else
                 {
-                    ecs.SetupCacheSetFromDb(_dbContext);
+                    _contextTracking.EnqueContextTask(ecs.SetupCacheSetFromDb(_dbContext));
                 }
 
             }
