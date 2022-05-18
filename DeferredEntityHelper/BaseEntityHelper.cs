@@ -9,17 +9,34 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper
 {
-    public class BaseEntityHelper<T> : IAsyncDisposable, IPostSaveOperations where T : DbContext
+    public class BaseEntityHelper<T> : BaseEntityHelper where T : DbContext
     {
         protected T _context;
-        private HashSet<IDatabaseFuture> _def;
-        protected EntityCacheManager _cacheManager;
         public BaseEntityHelper(T context)
         {
             _context = context;
-            _def = new HashSet<IDatabaseFuture>();
-            _cacheManager = new EntityCacheManager(_context);
+            SetupCacheManager();
         }
+
+        public override T Context => _context;
+    }
+
+
+    public abstract class BaseEntityHelper :  IAsyncDisposable, IPostSaveOperations 
+    {
+        private HashSet<IDatabaseFuture> _def;
+        protected EntityCacheManager _cacheManager;
+        public BaseEntityHelper()
+        {
+            _def = new HashSet<IDatabaseFuture>();
+        }
+
+        protected virtual void SetupCacheManager()
+        {
+            _cacheManager = new EntityCacheManager(Context);
+        }
+
+        public abstract DbContext Context { get; }
 
         public virtual async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(Func<Task<PotentialFuture<TProp>>> a, params IFuture[] wait) where TProp : class
         {
@@ -38,7 +55,7 @@ namespace DeferredEntityHelper
         public virtual async Task<DatabaseFutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
         {
             _cacheManager.Add(e);
-            await this._context.Set<TProp>().AddAsync(e);
+            await this.Context.Set<TProp>().AddAsync(e);
             DatabaseFutureDetermined<TProp> save = new DatabaseFutureDetermined<TProp>(e, actionPostSave, this);
             _def.Add(save);
             return save;
@@ -50,7 +67,7 @@ namespace DeferredEntityHelper
             await _cacheManager.EnsureReadersAreFinished();
             do
             {
-                await _context.SaveChangesAsync();
+                await this.Context.SaveChangesAsync();
                 //using (await _mutext.LockAsync())
                 {
                     refs = _def;
@@ -65,7 +82,7 @@ namespace DeferredEntityHelper
 
         public virtual async Task DeleteEntityAsync<TProp>(TProp e) where TProp : class
         {
-            _context.Set<TProp>().Remove(e);
+            this.Context.Set<TProp>().Remove(e);
         }
 
         async Task IPostSaveOperations.TriggerFullSave()
