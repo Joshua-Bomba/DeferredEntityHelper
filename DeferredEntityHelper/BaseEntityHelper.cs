@@ -22,7 +22,7 @@ namespace DeferredEntityHelper
     }
 
 
-    public abstract class BaseEntityHelper :  IAsyncDisposable, IPostSaveOperations 
+    public abstract partial class BaseEntityHelper :  IAsyncDisposable, IPostSaveOperations 
     {
         private HashSet<IDatabaseFuture> _def;
         protected EntityCacheManager _cacheManager;
