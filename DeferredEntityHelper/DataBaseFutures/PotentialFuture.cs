@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.DataBaseFutures
 {
-    public class PotentialFuture<T> : IFuture where T : class
+    public class PotentialFuture<T> : IFuture<T> where T : class
     {
         protected T _data;
         public PotentialFuture(T data)
