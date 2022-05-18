@@ -13,6 +13,7 @@ namespace DeferredEntityHelperSample
     [TestFixture]
     public class ContextTests
     {
+        [Order(1)]
         [Test]
         public void InitInMemoryContext()
         {
@@ -81,9 +82,10 @@ namespace DeferredEntityHelperSample
             }
         }
 
-
+        [Order(2)]
         [Test]
         public void EntityHelperTest() => TestEntityHelper().GetAwaiter().GetResult();
+        [Order(3)]
         [Test]
         public void CacheTest() => TestCache().GetAwaiter().GetResult();
 
