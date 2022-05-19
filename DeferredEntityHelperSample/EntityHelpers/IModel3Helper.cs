@@ -31,7 +31,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
             {
                 //Once Model3 is resolve we will wait for the PotentailFuture passed in
                 //it might be possible that one SaveChances has resolved it
-                await this.WaitForPromises<Model2>(async () =>
+                await this.WaitForPromises(new FutureCallbackHandler<Model2>(async () =>
                 {
                     //Will Get the Resolved Model1
                     Model1 m1 = pm1.GetItem();
@@ -43,7 +43,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
                         Model3 = x,
                     };
                     return await this.AddEntityAsync(m2);//add the Model2 Entity and return it, guess we don't need to return it
-                },pm1);                
+                },pm1));                
             });
         }
     }
