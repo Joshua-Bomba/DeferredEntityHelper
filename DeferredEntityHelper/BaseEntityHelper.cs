@@ -38,17 +38,16 @@ namespace DeferredEntityHelper
 
         public abstract DbContext Context { get; }
 
-        public virtual async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(Func<Task<PotentialFuture<TProp>>> a, params IFuture[] wait) where TProp : class
+        public virtual async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class
         {
-            IDatabaseFuture[] def = wait.Where(x => !x.Resolved && x is IDatabaseFuture).Cast<IDatabaseFuture>().ToArray();
-            if (def.Any())
+            if (!callback.DepedenciesResolved())
             {
-                DatabaseFuture<TProp> save = new DatabaseFutureUnDetermined<TProp>(def, a, this);
+                DatabaseFuture<TProp> save = new DatabaseFutureUnDetermined<TProp>(callback, this);
                 this._def.Add(save);
                 return save;
             }
 
-            return await a.Invoke();
+            return await callback.Callback();
         }
 
 

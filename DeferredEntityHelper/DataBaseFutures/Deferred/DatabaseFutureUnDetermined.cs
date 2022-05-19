@@ -8,13 +8,11 @@ namespace DeferredEntityHelper.DataBaseFutures
 {
     public class DatabaseFutureUnDetermined<T> : DatabaseFuture<T> where T : class
     {
-        private IDatabaseFuture[] _wait;
-        private Func<Task<PotentialFuture<T>>> _func;
+        private IFutureCallback<T> _callback;
         private PotentialFuture<T> _next;
-        public DatabaseFutureUnDetermined(IDatabaseFuture[] wait, Func<Task<PotentialFuture<T>>> f, IPostSaveOperations efHelper) : base(null, efHelper)
+        public DatabaseFutureUnDetermined(IFutureCallback<T> callback, IPostSaveOperations efHelper) : base(null, efHelper)
         {
-            _wait = wait;
-            _func = f;
+            _callback = callback;
             _next = null;
         }
 
@@ -37,15 +35,14 @@ namespace DeferredEntityHelper.DataBaseFutures
                     this._efHelper.AddUnresolvedElement(this);
                 }
             }
-            else if (_wait.Any(x => !x.Resolved))
+            else if (!_callback.DepedenciesResolved())
             {
                 this._efHelper.AddUnresolvedElement(this);//we will have it go around again till the promises we are waiting on are resolved
             }
             else
             {
-                PotentialFuture<T> p = await _func();
-                _wait = null;
-                //save.Set(p);
+                PotentialFuture<T> p = await _callback.Callback();
+                _callback = null;
                 if (!p.Resolved)
                 {
                     _next = p;
