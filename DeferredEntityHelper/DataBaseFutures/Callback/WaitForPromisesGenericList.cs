@@ -1,4 +1,5 @@
 ﻿using DeferredEntityHelper.DataBaseFutures;
+using DeferredEntityHelper.DataBaseFutures.Callback;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,10 @@ namespace DeferredEntityHelper
             where TResult : class where TProp1 : class where TProp2 : class where TProp3 : class where TProp4 : class where TProp5 : class where TProp6 : class where TProp7 : class where TProp8 : class where TProp9 : class where TProp10 : class where TProp11 : class where TProp12 : class where TProp13 : class where TProp14 : class where TProp15 : class;
         public delegate Task<PotentialFuture<TResult>> WaitForPromiseCallback<TResult, TProp1, TProp2, TProp3, TProp4, TProp5, TProp6, TProp7, TProp8, TProp9, TProp10, TProp11, TProp12, TProp13, TProp14, TProp15, TProp16>(TProp1 arg1, TProp2 arg2, TProp3 arg3, TProp4 arg4, TProp5 arg5, TProp6 arg6, TProp7 arg7, TProp8 arg8, TProp9 arg9, TProp10 arg10, TProp11 arg11, TProp12 arg12, TProp13 arg13, TProp14 arg14, TProp15 arg15, TProp16 arg16)
             where TResult : class where TProp1 : class where TProp2 : class where TProp3 : class where TProp4 : class where TProp5 : class where TProp6 : class where TProp7 : class where TProp8 : class where TProp9 : class where TProp10 : class where TProp11 : class where TProp12 : class where TProp13 : class where TProp14 : class where TProp15 : class where TProp16 : class;
+
+       
+        public async Task<PotentialFuture<TResult>> WaitForPromises<TResult>(Func<Task<PotentialFuture<TResult>>> f, params IFuture[] wait) where TResult : class
+            => await WaitForPromises<TResult>(new FutureCallbackHandler<TResult>(f, wait));
 
         public async Task<PotentialFuture<TResult>> WaitForPromises<TResult, TProp1>(WaitForPromiseCallback<TResult, TProp1> getResultFunction, IFuture<TProp1> arg1)
             where TResult : class where TProp1 : class => throw new NotImplementedException();
