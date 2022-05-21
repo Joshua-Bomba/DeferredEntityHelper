@@ -8,11 +8,12 @@ namespace DeferredEntityHelper.DataBaseFutures
 {
     public interface IFuture<T> : IFuture where T : class
     {
-        T GetItem();
+        new T GetItem();
     }
 
     public interface IFuture
     {
+        object GetItem();
         bool Resolved { get; }
     }
 }

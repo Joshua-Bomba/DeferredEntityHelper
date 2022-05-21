@@ -19,6 +19,8 @@ namespace DeferredEntityHelper.DataBaseFutures
             return _data;
         }
 
+        object IFuture.GetItem() => this.GetItem();
+
         public virtual bool Resolved => true;
 
         public virtual async Task<T> ForceResolveAndGetItem() => _data;
