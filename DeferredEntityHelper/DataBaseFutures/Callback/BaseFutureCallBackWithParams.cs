@@ -6,16 +6,27 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.DataBaseFutures.Callback
 {
-    public abstract class BaseFutureCallBackWithParams<T> : IFutureCallback<T> where T : class
+    public abstract class BaseFutureCallBackWithParams<T,CB> : IFutureCallback<T> where T : class
     {
-        private IFuture[] _wait;
-        public BaseFutureCallBackWithParams(IFuture[] wait)
+        protected IFuture[] _e;
+        protected CB _cb;
+        private byte _enumCount;
+        public BaseFutureCallBackWithParams(CB cb) 
         {
-            _wait = wait;
+            _cb = cb;
+            _enumCount = 0;
         }
+
+        public virtual IFutureCallback<T> AttachItems(params IFuture[] items)
+        {
+            _e = items;
+            return this;
+        }
+
+        protected virtual TResult GetItem<TResult>() where TResult : class => (TResult)_e[_enumCount++].GetItem();
 
         public abstract Task<PotentialFuture<T>> Callback();
 
-        public bool DepedenciesResolved() => !_wait.Any(x => !x.Resolved);
+        public bool DepedenciesResolved() => !_e.Any(x => !x.Resolved);
     }
 }
