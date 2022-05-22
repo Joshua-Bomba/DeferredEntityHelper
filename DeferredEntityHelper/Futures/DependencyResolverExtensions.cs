@@ -10,7 +10,7 @@ namespace DeferredEntityHelper.Futures
 {
     //this is tedious but a bit nice to use
     //actually visual studio intellicode handled most of it
-    public static class WaitForPromisesGenericList
+    public static class DependencyResolverExtensions
     {
         public delegate Task<PotentialFuture<TResult>> WaitForPromiseCallback<TResult, TProp1>(TProp1 arg1)
             where TResult : class where TProp1 : class;
