@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public class PotentialFuture<T> : IFuture<T> where T : class
+    public abstract class PotentialFuture<T> : IFuture<T> where T : class
     {
         protected T _data;
         public PotentialFuture(T data)
@@ -21,11 +21,11 @@ namespace DeferredEntityHelper.Futures
 
         object IFuture.GetItem() => this.GetItem();
 
-        public virtual bool Resolved => true;
+        public abstract bool Resolved { get; }
 
-        public virtual async Task<T> ForceResolveAndGetItem() => _data;
+        public abstract Task<T> ForceResolveAndGetItem();
 
-        public static implicit operator PotentialFuture<T>(T t) => new PotentialFuture<T>(t);
 
+        public static implicit operator PotentialFuture<T>(T t) => new FutureWrapper<T>(t);
     }
 }

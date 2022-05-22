@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public class FutureDetermined<T> : Future<T> where T : class
+    public class FutureDetermined<T> : Future<T>, IFutureDetermined<T> where T : class
     {
         private IFutureCallback<T> _callback;
         public FutureDetermined(T key, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(key, dependencyResolver)
