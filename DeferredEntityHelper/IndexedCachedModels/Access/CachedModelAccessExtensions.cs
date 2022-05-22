@@ -14,7 +14,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             ICachedModelAccess<TKey, TValue> c = await a;
             if(c != null&& c.ContainsKey(key))
             {
-                return c[key];
+                return c[key]?.GetItem();
             }
             return null;
         }
