@@ -48,7 +48,7 @@ namespace DeferredEntityHelperSample
             }
         }
 
-        public static async Task<DatabaseFutureDetermined<Model4>> AddTestModel(EntityHelper eh)
+        public static async Task<FutureDetermined<Model4>> AddTestModel(EntityHelper eh)
         {
             Model4 model = new Model4
             {

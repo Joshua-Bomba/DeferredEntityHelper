@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public class DatabaseFutureUnDetermined<T> : DatabaseFuture<T> where T : class
+    public class FutureUnDetermined<T> : Future<T> where T : class
     {
         private IFutureCallback<T> _callback;
         private PotentialFuture<T> _next;
-        public DatabaseFutureUnDetermined(IFutureCallback<T> callback, IPostSaveOperations efHelper) : base(null, efHelper)
+        public FutureUnDetermined(IFutureCallback<T> callback, IFuturePostResolveOperations efHelper) : base(null, efHelper)
         {
             _callback = callback;
             _next = null;

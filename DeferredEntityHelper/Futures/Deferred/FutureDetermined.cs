@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public class DatabaseFutureDetermined<T> : DatabaseFuture<T> where T : class
+    public class FutureDetermined<T> : Future<T> where T : class
     {
         private Func<T, Task> _func;
-        public DatabaseFutureDetermined(T key, Func<T, Task> postFunc, IPostSaveOperations efHelper) : base(key, efHelper)
+        public FutureDetermined(T key, Func<T, Task> postFunc, IFuturePostResolveOperations efHelper) : base(key, efHelper)
         {
             _func = postFunc;
         }

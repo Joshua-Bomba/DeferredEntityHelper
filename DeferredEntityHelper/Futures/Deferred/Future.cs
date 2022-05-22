@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public abstract class DatabaseFuture<T> : PotentialFuture<T>, IDatabaseFuture where T : class
+    public abstract class Future<T> : PotentialFuture<T>, IFutureEvent where T : class
     {
-        protected IPostSaveOperations _efHelper;
+        protected IFuturePostResolveOperations _efHelper;
         protected bool _resolved;
-        public DatabaseFuture(T data, IPostSaveOperations efHelper) : base(data)
+        public Future(T data, IFuturePostResolveOperations efHelper) : base(data)
         {
             _resolved = false;
             _efHelper = efHelper;

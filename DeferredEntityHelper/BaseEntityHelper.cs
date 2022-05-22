@@ -23,13 +23,13 @@ namespace DeferredEntityHelper
     }
 
 
-    public abstract partial class BaseEntityHelper :  IAsyncDisposable, IPostSaveOperations 
+    public abstract partial class BaseEntityHelper :  IAsyncDisposable, IFuturePostResolveOperations 
     {
-        private HashSet<IDatabaseFuture> _def;
+        private HashSet<IFutureEvent> _def;
         protected EntityCacheManager _cacheManager;
         public BaseEntityHelper()
         {
-            _def = new HashSet<IDatabaseFuture>();
+            _def = new HashSet<IFutureEvent>();
         }
 
         protected virtual void SetupCacheManager()
@@ -43,7 +43,7 @@ namespace DeferredEntityHelper
         {
             if (!callback.DepedenciesResolved())
             {
-                DatabaseFuture<TProp> save = new DatabaseFutureUnDetermined<TProp>(callback, this);
+                Future<TProp> save = new FutureUnDetermined<TProp>(callback, this);
                 this._def.Add(save);
                 return save;
             }
@@ -52,18 +52,18 @@ namespace DeferredEntityHelper
         }
 
 
-        public virtual async Task<DatabaseFutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
+        public virtual async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
         {
             _cacheManager.Add(e);
             await this.Context.Set<TProp>().AddAsync(e);
-            DatabaseFutureDetermined<TProp> save = new DatabaseFutureDetermined<TProp>(e, actionPostSave, this);
+            FutureDetermined<TProp> save = new FutureDetermined<TProp>(e, actionPostSave, this);
             _def.Add(save);
             return save;
         }
 
         public virtual async Task SaveChangesAsync()
         {
-            HashSet<IDatabaseFuture> refs;
+            HashSet<IFutureEvent> refs;
             await _cacheManager.EnsureReadersAreFinished();
             do
             {
@@ -71,11 +71,11 @@ namespace DeferredEntityHelper
                 //using (await _mutext.LockAsync())
                 {
                     refs = _def;
-                    _def = new HashSet<IDatabaseFuture>();
+                    _def = new HashSet<IFutureEvent>();
                 }
-                foreach (IDatabaseFuture p in refs)
+                foreach (IFutureEvent p in refs)
                     p.SavedChangesTriggered();
-                foreach (IDatabaseFuture p in refs)
+                foreach (IFutureEvent p in refs)
                     await p.Process();
             } while (_def.Any());
         }
@@ -85,10 +85,10 @@ namespace DeferredEntityHelper
             this.Context.Set<TProp>().Remove(e);
         }
 
-        async Task IPostSaveOperations.TriggerFullSave()
+        async Task IFuturePostResolveOperations.TriggerFullSave()
             => await this.SaveChangesAsync();
 
-        void IPostSaveOperations.AddUnresolvedElement(IDatabaseFuture f)
+        void IFuturePostResolveOperations.AddUnresolvedElement(IFutureEvent f)
             => _def.Add(f);
 
         public async ValueTask DisposeAsync()

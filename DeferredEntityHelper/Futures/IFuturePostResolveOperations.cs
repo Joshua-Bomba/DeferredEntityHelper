@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public interface IDatabaseFuture : IFuture
+    public interface IFuturePostResolveOperations
     {
-        Task Process();
-        void SavedChangesTriggered();
+        Task TriggerFullSave();
+        void AddUnresolvedElement(IFutureEvent f);
     }
 }
