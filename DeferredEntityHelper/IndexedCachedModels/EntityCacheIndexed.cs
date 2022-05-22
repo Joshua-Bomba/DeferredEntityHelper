@@ -41,16 +41,16 @@ namespace DeferredEntityHelper.IndexedCachedModels
         private async ValueTask _SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
         {
             await relatedSet.Finished();
-            foreach (TModel entity in relatedSet.GetData())
+            foreach (IFutureDetermined<TModel> entity in relatedSet.GetData())
             {
-                this[_keyGetter(entity)] = IFutureDetermined.Wrap(entity);
+                this[_keyGetter(entity.GetItem())] = entity;
             }
         }
 
         public void SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
             => _setupTask = _SetupCacheFromRelated(relatedSet);
 
-        public IEnumerable<TModel> GetData() => this.Values.Select(x=>x.GetItem());
+        public IEnumerable<IFutureDetermined<TModel>> GetData() => this.Values;
 
         public async ValueTask Finished() => await _setupTask;
     }

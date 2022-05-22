@@ -14,6 +14,6 @@ namespace DeferredEntityHelper.IndexedCachedModels
         ValueTask SetupCacheSetFromDb(DbContext context);
         ValueTask Finished();
         void SetupCacheFromRelated(IEntityCacheIndexed<T> relatedSet);
-        IEnumerable<T> GetData();
+        IEnumerable<IFutureDetermined<T>> GetData();
     }
 }
