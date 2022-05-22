@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DeferredEntityHelper.Futures;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,11 +50,11 @@ namespace DeferredEntityHelper.IndexedCachedModels
             return ecs;
         }
 
-        public void Add(object t)
+        public void Add(IFutureDetermined t)
         {
             if (_cacheSets.Any())
             {
-                T prop = (T)t;
+                if(t is IFutureDetermined<T> prop)
                 foreach (KeyValuePair<Type, IEntityCacheIndexed<T>> kv in _cacheSets)
                 {
                     kv.Value.Add(prop);

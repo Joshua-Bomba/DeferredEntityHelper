@@ -59,6 +59,23 @@ namespace DeferredEntityHelperSample
             }
         }
 
+        private async ValueTask TestResolvingCacheData()
+        {
+            using (SampleContext context = new SampleContext())
+            {
+                await using (EntityHelper eh = new EntityHelper(context))
+                {
+                    string org = "The Original Once Should be added and a new one should not be added again";
+                    PotentialFuture<Model1> a1 = await eh.Model4Helper.CreateModel4IfItDoesNotExistAndReturnModel1Attached("Test",org,"a value");
+                    //this Potential future is not resolve and undefined aldo our Model4 is added to the cache the model 1 is not resolved yet
+
+                    //when we call it again since we have the same item it will fetch the Model 4 but when it tries to get the Model4 item it can't since it's not yet been added
+                    PotentialFuture<Model1> a2 = await eh.Model4Helper.CreateModel4IfItDoesNotExistAndReturnModel1Attached("Test","a new record should not be inserted because it already exists","Another Value");
+
+                }
+            }
+        }
+
         private async ValueTask TestCache()
         {
             using (SampleContext context = new SampleContext())
@@ -89,6 +106,9 @@ namespace DeferredEntityHelperSample
         [Order(3)]
         [Test]
         public void CacheTest() => TestCache().GetAwaiter().GetResult();
+        [Order(4)]
+        [Test]
+        public void ResolvingCacheData() => TestResolvingCacheData().GetAwaiter().GetResult();
 
 
     }

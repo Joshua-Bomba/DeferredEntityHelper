@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DeferredEntityHelper.Futures;
 
 namespace DeferredEntityHelper.IndexedCachedModels
 {
@@ -40,7 +41,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             return await ec.GetByIndexer(indexer);
         }
 
-        public void Add<TProp>(TProp e) where TProp : class
+        public void NewEntityAdded<TProp>(IFutureDetermined<TProp> e) where TProp : class
         {
             Type entityType = typeof(TProp);
             if (_cachedItems.ContainsKey(entityType))

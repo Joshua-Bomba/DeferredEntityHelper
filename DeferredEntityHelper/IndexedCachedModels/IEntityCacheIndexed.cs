@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DeferredEntityHelper.Futures;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace DeferredEntityHelper.IndexedCachedModels
 {
     public interface IEntityCacheIndexed<T> where T : class
     {
-        void Add(T entity);
+        void Add(IFutureDetermined<T> entity);
         ValueTask SetupCacheSetFromDb(DbContext context);
         ValueTask Finished();
         void SetupCacheFromRelated(IEntityCacheIndexed<T> relatedSet);
-        IEnumerable<T> GetData();
+        IEnumerable<IFutureDetermined<T>> GetData();
     }
 }
