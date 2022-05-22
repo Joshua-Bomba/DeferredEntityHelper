@@ -1,11 +1,11 @@
-﻿using DeferredEntityHelper.DataBaseFutures.Callback;
+﻿using DeferredEntityHelper.Futures.Callback;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeferredEntityHelper.DataBaseFutures
+namespace DeferredEntityHelper.Futures
 {
     public class DatabaseFutureUnDetermined<T> : DatabaseFuture<T> where T : class
     {

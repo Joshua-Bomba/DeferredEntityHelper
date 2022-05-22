@@ -1,4 +1,4 @@
-﻿using DeferredEntityHelper.DataBaseFutures;
+﻿using DeferredEntityHelper.Futures;
 using DeferredEntityHelperSample.Models;
 using System;
 using System.Collections.Generic;

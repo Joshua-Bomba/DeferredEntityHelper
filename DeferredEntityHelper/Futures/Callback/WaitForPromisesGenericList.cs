@@ -1,5 +1,5 @@
-﻿using DeferredEntityHelper.DataBaseFutures;
-using DeferredEntityHelper.DataBaseFutures.Callback;
+﻿using DeferredEntityHelper.Futures;
+using DeferredEntityHelper.Futures.Callback;
 using System;
 using System.Collections.Generic;
 using System.Linq;

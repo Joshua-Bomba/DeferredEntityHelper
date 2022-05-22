@@ -1,4 +1,4 @@
-﻿using DeferredEntityHelper.DataBaseFutures;
+﻿using DeferredEntityHelper.Futures;
 using DeferredEntityHelperSample.EntityHelpers;
 using DeferredEntityHelperSample.Models;
 using NUnit.Framework;

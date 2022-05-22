@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeferredEntityHelper.DataBaseFutures
+namespace DeferredEntityHelper.Futures
 {
     public class DatabaseFutureDetermined<T> : DatabaseFuture<T> where T : class
     {

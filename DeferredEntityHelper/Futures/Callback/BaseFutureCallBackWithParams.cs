@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeferredEntityHelper.DataBaseFutures.Callback
+namespace DeferredEntityHelper.Futures.Callback
 {
     public abstract class BaseFutureCallBackWithParams<T,CB> : IFutureCallback<T> where T : class
     {

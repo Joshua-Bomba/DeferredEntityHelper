@@ -1,5 +1,5 @@
-﻿using DeferredEntityHelper.DataBaseFutures;
-using DeferredEntityHelper.DataBaseFutures.Callback;
+﻿using DeferredEntityHelper.Futures;
+using DeferredEntityHelper.Futures.Callback;
 using DeferredEntityHelper.IndexedCachedModels;
 using Microsoft.EntityFrameworkCore;
 using System;
