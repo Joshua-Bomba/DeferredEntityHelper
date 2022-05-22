@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public class FutureWrapper<T> : PotentialFuture<T>, IFutureDetermined<T> where T : class
+    public class FutureWrapper<T> : PotentialFuture<T>,  IFutureDetermined<T> where T : class
     {
+        public FutureWrapper(T t) : base(t)
+        {
 
-        public FutureWrapper(T t) : base(t) { }
+        }
         public override bool Resolved => true;
 
-        public async override Task<T> ForceResolveAndGetItem() => _data;
-
-       
+        public T Item => _data;
     }
 }

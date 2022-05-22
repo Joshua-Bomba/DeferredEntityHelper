@@ -15,6 +15,8 @@ namespace DeferredEntityHelper.Futures
             _callback = callback;
         }
 
+        public T Item => _data;
+
         public override async Task Process()
         {
             Task? t = this._callback?.Callback(this);

@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public interface IFuture<T> : IFuture where T : class
+    public interface IPotentialFuture
     {
-        new T GetItem();
-    }
-
-    public interface IFuture
-    {
-        object GetItem();
         bool Resolved { get; }
     }
 }

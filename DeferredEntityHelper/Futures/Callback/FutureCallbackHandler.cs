@@ -9,8 +9,8 @@ namespace DeferredEntityHelper.Futures.Callback
     public class FutureCallbackHandler<T> : IFutureCallback<T> where T : class
     {
         private Func<Task<PotentialFuture<T>>> _func;
-        private IFuture[] _wait;
-        public FutureCallbackHandler(Func<Task<PotentialFuture<T>>> f, params IFuture[] wait)
+        private IPotentialFuture[] _wait;
+        public FutureCallbackHandler(Func<Task<PotentialFuture<T>>> f, params IPotentialFuture[] wait)
         {
             _func = f;
             _wait = wait;

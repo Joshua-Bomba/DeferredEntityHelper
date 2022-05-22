@@ -11,14 +11,14 @@ namespace DeferredEntityHelperSample.EntityHelpers
 {
     public interface IModel4Helper
     {
-        Task<PotentialFuture<Model4>> CreateModel4IfItDoesNotExist(string type, string secondValue);
+        Task<IFutureDetermined<Model4>> CreateModel4IfItDoesNotExist(string type, string secondValue);
     }
 
     public partial class EntityHelper : IModel4Helper
     {
         public IModel4Helper Model4Helper => this;
 
-        async Task<PotentialFuture<Model4>> IModel4Helper.CreateModel4IfItDoesNotExist(string type, string secondValue)
+        async Task<IFutureDetermined<Model4>> IModel4Helper.CreateModel4IfItDoesNotExist(string type, string secondValue)
         {
             //First we check if the item is in the DataBase
             Model4? m4 = await this._cacheManager.GetCachedIndexedDictionary<string,Model4>(x=>x.Type).AtKey(type);

@@ -16,9 +16,13 @@ namespace DeferredEntityHelperSample
             public string Item { get; set; }
             public bool Resolved { get; set; }
 
+            public async Task<string> ForceResolveAndGetItem()
+            {
+                return Item;
+            }
+
             public string GetItem() => Item;
 
-            object IFuture.GetItem() => GetItem();
         }
 
         public async ValueTask NonGenericParamWaitForPromiseTestAsync()

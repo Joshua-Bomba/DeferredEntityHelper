@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public abstract class Future<T> : PotentialFuture<T>, IFutureEvent where T : class
+    public abstract class Future<T> : PotentialFuture<T>,IFuture<T>, IFutureEvent where T : class
     {
         protected IDependencyResolver _dependencyResolver;
         protected bool _resolved;
@@ -18,7 +18,7 @@ namespace DeferredEntityHelper.Futures
 
         public override bool Resolved => _resolved;
 
-        public override async Task<T> ForceResolveAndGetItem()
+        public virtual async Task<T> ForceResolveAndGetItem()
         {
             if (!_resolved)
             {
@@ -30,5 +30,7 @@ namespace DeferredEntityHelper.Futures
         public abstract Task Process();
 
         public virtual void DependencyResolvedTrigger() => _resolved = true;
+
+        public T GetItem() => _data;
     }
 }

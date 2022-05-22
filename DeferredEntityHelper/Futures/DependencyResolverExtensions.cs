@@ -49,7 +49,7 @@ namespace DeferredEntityHelper.Futures
         public static FutureDetermined<TProp> AddUnresolvedElement<TProp>(this IDependencyResolver dp, TProp el, Func<TProp, Task> f) where TProp : class
             => dp.AddUnresolvedElement(el,new ResolvedCallbackHandler<TProp>(f));
 
-        public static async Task<PotentialFuture<TResult>> WaitForPromises<TResult>(this IDependencyResolver dp, Func<Task<PotentialFuture<TResult>>> f, params IFuture[] wait) where TResult : class
+        public static async Task<PotentialFuture<TResult>> WaitForPromises<TResult>(this IDependencyResolver dp, Func<Task<PotentialFuture<TResult>>> f, params IPotentialFuture[] wait) where TResult : class
             => await dp.WaitForPromises(new FutureCallbackHandler<TResult>(f, wait));
 
         public static async Task<PotentialFuture<TResult>> WaitForPromises<TResult, TProp1>(this IDependencyResolver dp, WaitForPromiseCallback<TResult, TProp1> getResultFunction, IFuture<TProp1> arg1)

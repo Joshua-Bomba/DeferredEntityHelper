@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public interface IFutureEvent : IPotentialFuture
+    public interface IFuture<T> : IPotentialFuture where T : class
     {
-        Task Process();
-        void DependencyResolvedTrigger();
+        T GetItem();
+        Task<T> ForceResolveAndGetItem();
+
     }
 }

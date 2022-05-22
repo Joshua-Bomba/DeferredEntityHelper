@@ -38,9 +38,9 @@ namespace DeferredEntityHelper
 
         public abstract DbContext Context { get; }
 
-        public virtual async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
+        public virtual async Task<IFutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
         {
-            FutureDetermined<TProp> det = this.AddUnresolvedElement(e, actionPostSave);
+            IFutureDetermined<TProp> det = this.AddUnresolvedElement(e, actionPostSave);
             _cacheManager.NewEntityAdded(det);
             await this.Context.Set<TProp>().AddAsync(e);
             return det;
