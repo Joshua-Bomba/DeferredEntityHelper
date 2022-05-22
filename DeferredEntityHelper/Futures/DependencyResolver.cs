@@ -14,6 +14,14 @@ namespace DeferredEntityHelper.Futures
         {
             _def = new HashSet<IFutureEvent>();
         }
+
+        public FutureDetermined<TProp> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
+        {
+            FutureDetermined<TProp> save = new FutureDetermined<TProp>(el, callback, this);
+            _def.Add(save);
+            return save;
+        }
+
         public void AddUnresolvedElement(IFutureEvent f)
         {
             _def.Add(f);
