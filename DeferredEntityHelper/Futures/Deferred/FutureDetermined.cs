@@ -23,7 +23,5 @@ namespace DeferredEntityHelper.Futures
                 await t;
             }
         }
-
-        PotentialFuture<T> IFutureDetermined<T>.AsPotentialFuture() => this;
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.IndexedCachedModels
 {
-    public class EntityCacheIndexed<TModel, TModelAccessKey> : Dictionary<TModelAccessKey, PotentialFuture<TModel>>, IEntityCacheIndexed<TModel>, ICachedModelAccess<TModelAccessKey, TModel> where TModel : class where TModelAccessKey : notnull
+    public class EntityCacheIndexed<TModel, TModelAccessKey> : Dictionary<TModelAccessKey, IFutureDetermined<TModel>>, IEntityCacheIndexed<TModel>, ICachedModelAccess<TModelAccessKey, TModel> where TModel : class where TModelAccessKey : notnull
     {
         private Func<TModel, TModelAccessKey> _keyGetter;
         private ValueTask _setupTask;
@@ -23,7 +23,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             while (await en.MoveNextAsync())
             {
                 
-                this[_keyGetter(en.Current)] = en.Current;
+                this[_keyGetter(en.Current)] = IFutureDetermined.Wrap(en.Current);
             }
         }
 
@@ -35,7 +35,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public void Add(IFutureDetermined<TModel> entity)
         {
-            this[_keyGetter(entity.GetItem())] = entity.AsPotentialFuture();
+            this[_keyGetter(entity.GetItem())] = entity;
         }
 
         private async ValueTask _SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
@@ -43,14 +43,14 @@ namespace DeferredEntityHelper.IndexedCachedModels
             await relatedSet.Finished();
             foreach (IFutureDetermined<TModel> entity in relatedSet.GetData())
             {
-                this[_keyGetter(entity.GetItem())] = entity.AsPotentialFuture();
+                this[_keyGetter(entity.GetItem())] = entity;
             }
         }
 
         public void SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
             => _setupTask = _SetupCacheFromRelated(relatedSet);
 
-        public IEnumerable<IFutureDetermined<TModel>> GetData() => this.Values.Cast<IFutureDetermined<TModel>>();
+        public IEnumerable<IFutureDetermined<TModel>> GetData() => this.Values;
 
         public async ValueTask Finished() => await _setupTask;
     }

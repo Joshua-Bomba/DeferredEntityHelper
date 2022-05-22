@@ -26,7 +26,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
         async Task<PotentialFuture<Model4>> IModel4Helper.CreateModel4IfItDoesNotExist(string type, string secondValue)
         {
             //First we check if the item is in the DataBase
-            PotentialFuture<Model4>? m4 = await this._cacheManager.GetCachedIndexedDictionary<string,Model4>(x=>x.Type).AtKey(type);
+            IFutureDetermined<Model4>? m4 = await this._cacheManager.GetCachedIndexedDictionary<string,Model4>(x=>x.Type).AtKey(type);
             if(m4?.GetItem() == null)
             {
                 //if it does not exist we will create the Model
@@ -51,7 +51,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
 
         async Task<PotentialFuture<Model1>> IModel4Helper.CreateModel4IfItDoesNotExistAndReturnModel1Attached(string type, string secondValue, string d)
         {
-            PotentialFuture<Model4>? m4 = await this._cacheManager.GetCachedIndexedDictionary<string, Model4>(x => x.Type).AtKey(type);
+            IFutureDetermined<Model4>? m4 = await this._cacheManager.GetCachedIndexedDictionary<string, Model4>(x => x.Type).AtKey(type);
             Model4 i = m4?.GetItem();
             if (i != null)
             {
