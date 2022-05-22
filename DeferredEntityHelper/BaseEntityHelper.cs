@@ -42,9 +42,7 @@ namespace DeferredEntityHelper
         {
             _cacheManager.Add(e);
             await this.Context.Set<TProp>().AddAsync(e);
-            FutureDetermined<TProp> save = new FutureDetermined<TProp>(e, actionPostSave, this);
-            AddUnresolvedElement(save);
-            return save;
+            return this.AddUnresolvedElement(e, new ResolvedCallbackHandler<TProp>(actionPostSave));
         }
 
         public virtual async Task SaveChangesAsync()
