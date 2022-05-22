@@ -8,9 +8,9 @@ namespace DeferredEntityHelper.Futures
 {
     public abstract class Future<T> : PotentialFuture<T>, IFutureEvent where T : class
     {
-        protected IFuturePostResolveOperations _efHelper;
+        protected IDependencyResolver _efHelper;
         protected bool _resolved;
-        public Future(T data, IFuturePostResolveOperations efHelper) : base(data)
+        public Future(T data, IDependencyResolver efHelper) : base(data)
         {
             _resolved = false;
             _efHelper = efHelper;

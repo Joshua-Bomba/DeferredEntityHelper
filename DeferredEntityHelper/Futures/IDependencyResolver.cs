@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
-    public interface IFuturePostResolveOperations
+    public interface IDependencyResolver
     {
         Task TriggerFullSave();
         void AddUnresolvedElement(IFutureEvent f);

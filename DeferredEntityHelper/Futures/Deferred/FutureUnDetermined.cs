@@ -11,7 +11,7 @@ namespace DeferredEntityHelper.Futures
     {
         private IFutureCallback<T> _callback;
         private PotentialFuture<T> _next;
-        public FutureUnDetermined(IFutureCallback<T> callback, IFuturePostResolveOperations efHelper) : base(null, efHelper)
+        public FutureUnDetermined(IFutureCallback<T> callback, IDependencyResolver efHelper) : base(null, efHelper)
         {
             _callback = callback;
             _next = null;

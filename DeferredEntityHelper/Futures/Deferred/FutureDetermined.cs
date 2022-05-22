@@ -9,7 +9,7 @@ namespace DeferredEntityHelper.Futures
     public class FutureDetermined<T> : Future<T> where T : class
     {
         private Func<T, Task> _func;
-        public FutureDetermined(T key, Func<T, Task> postFunc, IFuturePostResolveOperations efHelper) : base(key, efHelper)
+        public FutureDetermined(T key, Func<T, Task> postFunc, IDependencyResolver efHelper) : base(key, efHelper)
         {
             _func = postFunc;
         }

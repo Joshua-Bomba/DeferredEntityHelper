@@ -23,7 +23,7 @@ namespace DeferredEntityHelper
     }
 
 
-    public abstract partial class BaseEntityHelper :  IAsyncDisposable, IFuturePostResolveOperations 
+    public abstract partial class BaseEntityHelper :  IAsyncDisposable, IDependencyResolver 
     {
         private HashSet<IFutureEvent> _def;
         protected EntityCacheManager _cacheManager;
@@ -85,10 +85,10 @@ namespace DeferredEntityHelper
             this.Context.Set<TProp>().Remove(e);
         }
 
-        async Task IFuturePostResolveOperations.TriggerFullSave()
+        async Task IDependencyResolver.TriggerFullSave()
             => await this.SaveChangesAsync();
 
-        void IFuturePostResolveOperations.AddUnresolvedElement(IFutureEvent f)
+        void IDependencyResolver.AddUnresolvedElement(IFutureEvent f)
             => _def.Add(f);
 
         public async ValueTask DisposeAsync()
