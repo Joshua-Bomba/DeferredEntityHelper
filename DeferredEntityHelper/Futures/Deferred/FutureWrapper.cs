@@ -12,6 +12,8 @@ namespace DeferredEntityHelper.Futures
         public FutureWrapper(T t) : base(t) { }
         public override bool Resolved => true;
 
+        public PotentialFuture<T> AsPotentialFuture() => this;
+
         public async override Task<T> ForceResolveAndGetItem() => _data;
 
        

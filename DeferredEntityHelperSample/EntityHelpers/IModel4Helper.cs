@@ -45,7 +45,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
             }
             else
             {
-                return m4 as PotentialFuture<Model4>;//If it exists we can return it and it will implicity wrap it in a PotentialFuture that is already resolved
+                return m4.AsPotentialFuture();
             }
         }
 
