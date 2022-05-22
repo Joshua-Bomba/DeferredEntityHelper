@@ -14,6 +14,6 @@ namespace DeferredEntityHelper.Futures
     }
     public interface IFutureDetermined<T> : IFutureDetermined, IFuture<T> where T : class
     {
-
+        PotentialFuture<T> AsPotentialFuture();
     }
 }

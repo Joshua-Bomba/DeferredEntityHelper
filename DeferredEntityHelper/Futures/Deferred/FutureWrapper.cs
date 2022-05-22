@@ -14,6 +14,6 @@ namespace DeferredEntityHelper.Futures
 
         public async override Task<T> ForceResolveAndGetItem() => _data;
 
-       
+        PotentialFuture<T> IFutureDetermined<T>.AsPotentialFuture() => this;
     }
 }
