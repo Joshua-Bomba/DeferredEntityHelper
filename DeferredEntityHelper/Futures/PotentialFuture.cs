@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeferredEntityHelper.DataBaseFutures
+namespace DeferredEntityHelper.Futures
 {
-    public class PotentialFuture<T> : IFuture where T : class
+    public class PotentialFuture<T> : IFuture<T> where T : class
     {
         protected T _data;
         public PotentialFuture(T data)
@@ -14,14 +14,16 @@ namespace DeferredEntityHelper.DataBaseFutures
             _data = data;
         }
 
-        public T GetUnresolvedItem()
+        public T GetItem()
         {
             return _data;
         }
 
+        object IFuture.GetItem() => this.GetItem();
+
         public virtual bool Resolved => true;
 
-        public virtual async Task<T> GetResult() => _data;
+        public virtual async Task<T> ForceResolveAndGetItem() => _data;
 
         public static implicit operator PotentialFuture<T>(T t) => new PotentialFuture<T>(t);
 

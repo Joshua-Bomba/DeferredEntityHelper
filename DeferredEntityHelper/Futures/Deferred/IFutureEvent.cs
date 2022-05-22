@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeferredEntityHelper.DataBaseFutures
+namespace DeferredEntityHelper.Futures
 {
-    public interface IDatabaseFuture : IFuture
+    public interface IFutureEvent : IFuture
     {
         Task Process();
-        void SavedChangesTriggered();
+        void DependencyResolvedTrigger();
     }
 }

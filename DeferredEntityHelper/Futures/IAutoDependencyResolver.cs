@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DeferredEntityHelper.DataBaseFutures
+namespace DeferredEntityHelper.Futures
 {
-    public interface IFuture
+    public interface IAutoDependencyResolver : IAsyncDisposable, IDependencyResolver
     {
-        bool Resolved { get; }
     }
 }

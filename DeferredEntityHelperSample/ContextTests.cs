@@ -1,4 +1,4 @@
-﻿using DeferredEntityHelper.DataBaseFutures;
+﻿using DeferredEntityHelper.Futures;
 using DeferredEntityHelperSample.EntityHelpers;
 using DeferredEntityHelperSample.Models;
 using NUnit.Framework;
@@ -45,7 +45,7 @@ namespace DeferredEntityHelperSample
 
                     //with a DatabaseFutureDetermined you can call GetUnresolvedItem and modify stuff. the ID will not be generated yet but you can still modifiy stuff if it's
                     //not saved
-                    Model4 modifyM4 = m4.GetUnresolvedItem();
+                    Model4 modifyM4 = m4.GetItem();
                     modifyM4.ASecondValue = "I'm Gonna Change This Before We save";
 
                     //returns a DatabaseFutureUnDetermined
