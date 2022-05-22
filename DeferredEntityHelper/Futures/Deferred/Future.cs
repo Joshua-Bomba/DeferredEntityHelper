@@ -22,7 +22,7 @@ namespace DeferredEntityHelper.Futures
         {
             if (!_resolved)
             {
-                await _efHelper.TriggerFullSave();
+                await _efHelper.TriggerResolve();
             }
             return _data;
         }
