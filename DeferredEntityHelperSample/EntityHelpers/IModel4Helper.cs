@@ -55,7 +55,11 @@ namespace DeferredEntityHelperSample.EntityHelpers
             Model4 i = m4?.GetItem();
             if (i != null)
             {
-                return i.Model1s.First();
+                return await this.WaitForPromises<Model1,Model4>(async x =>
+                {
+                    //Once the Item is resolved we can grab the first item
+                    return x.Model1s.First();
+                }, m4);
             }
             else
             {
