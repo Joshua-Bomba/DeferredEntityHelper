@@ -23,7 +23,7 @@ namespace DeferredEntityHelperSample
             object IFuture.GetItem() => GetItem();
         }
 
-        public async ValueTask NonParamWaitForPromiseTestAsync()
+        public async ValueTask NonGenericParamWaitForPromiseTestAsync()
         {
             using (SampleContext context = new SampleContext())
             {
@@ -32,7 +32,7 @@ namespace DeferredEntityHelperSample
 
                     MockFuture mf = new MockFuture();
 
-                    PotentialFuture<Model4> m4 =  await eh.WaitForPromises<Model4>(async () => await AddTestModel(eh));
+                    await eh.WaitForPromises<Model4>(async () => await AddTestModel(eh),mf);
 
                     mf.Item = "Resolve";
                     mf.Resolved = true;
@@ -58,105 +58,105 @@ namespace DeferredEntityHelperSample
             return await eh.AddEntityAsync(model);
         }
 
-        public static async Task<PotentialFuture<Model4>> TestFuture(EntityHelper eh ,Queue<MockFuture> q)
+        public static async Task<PotentialFuture<string>> TestFuture(EntityHelper eh ,Queue<MockFuture> q)
         {
             switch(q.Count)
             {
                 case 1:
-                    return await eh.WaitForPromises<Model4, string>(async (x) =>
+                    return await eh.WaitForPromises<string, string>(async (x) =>
                     {
                         TestParam(x);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     },q.Dequeue());
                 case 2:
-                    return await eh.WaitForPromises<Model4, string,string>(async (x,y) =>
+                    return await eh.WaitForPromises<string, string,string>(async (x,y) =>
                     {
                         TestParam(x,y);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(),q.Dequeue());
                 case 3:
-                    return await eh.WaitForPromises<Model4, string, string,string>(async (x, y,z) =>
+                    return await eh.WaitForPromises<string, string, string,string>(async (x, y,z) =>
                     {
                         TestParam(x, y,z);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 4:
-                    return await eh.WaitForPromises<Model4, string, string, string,string>(async (x, y, z, a) =>
+                    return await eh.WaitForPromises<string, string, string, string,string>(async (x, y, z, a) =>
                     {
                         TestParam(x, y, z,a);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 5:
-                    return await eh.WaitForPromises<Model4, string, string, string, string,string>(async (x, y, z, a,b) =>
+                    return await eh.WaitForPromises<string, string, string, string, string,string>(async (x, y, z, a,b) =>
                     {
                         TestParam(x, y, z, a,b);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 6:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string,string>(async (x, y, z, a, b,c) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string,string>(async (x, y, z, a, b,c) =>
                     {
                         TestParam(x, y, z, a, b,c);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue());
                 case 7:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string,string>(async (x, y, z, a, b, c,d) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c,d) =>
                     {
                         TestParam(x, y, z, a, b, c,d);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 8:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d,e) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d,e) =>
                     {
                         TestParam(x, y, z, a, b, c, d,e);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 9:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e,f) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e,f) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e,f);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 10:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f,g) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f,g) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e, f,g);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 11:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g,h) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g,h) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e, f, g,h);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 12:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h,i) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h,i) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e, f, g, h,i);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 13:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string, string, string, string, string, string>(async (x, y, z, a, b, c, d, e, f, g, h, i,j) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(async (x, y, z, a, b, c, d, e, f, g, h, i,j) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e, f, g, h, i,j);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue(), q.Dequeue());
                 case 14:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h, i, j,k) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h, i, j,k) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e, f, g, h, i, j,k);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 15:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h, i, j, k,l) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h, i, j, k,l) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e, f, g, h, i, j, k,l);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 case 16:
-                    return await eh.WaitForPromises<Model4, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h, i, j, k, l,m) =>
+                    return await eh.WaitForPromises<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string,string>(async (x, y, z, a, b, c, d, e, f, g, h, i, j, k, l,m) =>
                     {
                         TestParam(x, y, z, a, b, c, d, e, f, g, h, i, j, k, l,m);
-                        return await AddTestModel(eh);
+                        return "Resolved";
                     }, q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(), q.Dequeue(),q.Dequeue());
                 default:
                     return null;
@@ -190,7 +190,7 @@ namespace DeferredEntityHelperSample
 
 
         [Test]
-        public void NonParamWaitForPromiseTest() => NonParamWaitForPromiseTestAsync().GetAwaiter().GetResult();
+        public void NonGenericParamWaitForPromiseTest() => NonGenericParamWaitForPromiseTestAsync().GetAwaiter().GetResult();
         [Test]
         public void AllParamWaitForPromiseTest() => AllParamWaitForPromiseTestAsync().GetAwaiter().GetResult();
 
