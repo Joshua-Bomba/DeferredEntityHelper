@@ -41,7 +41,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             return await ec.GetByIndexer(indexer);
         }
 
-        public void NewEntityAdded<TProp>(FutureDetermined<TProp> e) where TProp : class
+        public void NewEntityAdded<TProp>(IFutureDetermined<TProp> e) where TProp : class
         {
             Type entityType = typeof(TProp);
             if (_cachedItems.ContainsKey(entityType))
