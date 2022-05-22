@@ -10,6 +10,6 @@ namespace DeferredEntityHelper.Futures.Callback
     {
         bool DepedenciesResolved();
 
-        Task<PotentialFuture<T>> Callback();
+        Task<PotentialFuture<T>> Callback(IFuture<T>? context);
     }
 }

@@ -15,7 +15,7 @@ namespace DeferredEntityHelper.Futures.Callback
             _func = f;
             _wait = wait;
         }
-        public async Task<PotentialFuture<T>> Callback() => await _func();
+        public async Task<PotentialFuture<T>> Callback(IFuture<T> resolved) => await _func();
 
         public bool DepedenciesResolved() => !_wait.Any(x => !x.Resolved);
     }

@@ -26,7 +26,10 @@ namespace DeferredEntityHelper.Futures.Callback
         protected virtual TResult GetItem<TResult>() where TResult : class => (TResult)_e[_enumCount++].GetItem();
 
         public abstract Task<PotentialFuture<T>> Callback();
+        async Task<PotentialFuture<T>> IFutureCallback<T>.Callback(IFuture<T> context) => await Callback();
 
         public bool DepedenciesResolved() => !_e.Any(x => !x.Resolved);
+
+
     }
 }

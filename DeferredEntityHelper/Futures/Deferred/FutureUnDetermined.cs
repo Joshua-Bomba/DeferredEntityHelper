@@ -42,7 +42,7 @@ namespace DeferredEntityHelper.Futures
             }
             else
             {
-                PotentialFuture<T> p = await _callback.Callback();
+                PotentialFuture<T> p = await _callback.Callback(this);
                 _callback = null;
                 if (!p.Resolved)
                 {

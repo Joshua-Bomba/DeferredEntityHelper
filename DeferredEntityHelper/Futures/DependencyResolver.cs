@@ -47,7 +47,7 @@ namespace DeferredEntityHelper.Futures
                 return save;
             }
 
-            return await callback.Callback();
+            return await callback.Callback(null);
         }
     }
 }
