@@ -35,7 +35,7 @@ namespace DeferredEntityHelper.Futures
             do
             {
                 await resolveOperation();
-            }while(await TriggerResolve());
+            }while(!await TriggerResolve());
         }
 
         public async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class
