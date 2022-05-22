@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace DeferredEntityHelperSample
 {
     [TestFixture]
-    public class WaitForPromiseTest
+    public class DependencyResolverTest
     {
         public class MockFuture : IFuture<string>
         {
@@ -25,18 +25,18 @@ namespace DeferredEntityHelperSample
 
         public async ValueTask NonGenericParamWaitForPromiseTestAsync()
         {
-            using (SampleContext context = new SampleContext())
+            MockFuture mf = null;
+            await using (AutoDependencyResolver eh = new AutoDependencyResolver(async () => {
+                mf.Item = "Resolve";
+                mf.Resolved = true;
+            }))
             {
-                await using (EntityHelper eh = new EntityHelper(context))
-                {
 
-                    MockFuture mf = new MockFuture();
+                mf = new MockFuture();
 
-                    await eh.WaitForPromises<Model4>(async () => await AddTestModel(eh),mf);
+                await eh.WaitForPromises<string>(async () => "Resolved",mf);
 
-                    mf.Item = "Resolve";
-                    mf.Resolved = true;
-                }
+
             }
         }
 
@@ -48,17 +48,7 @@ namespace DeferredEntityHelperSample
             }
         }
 
-        public static async Task<FutureDetermined<Model4>> AddTestModel(EntityHelper eh)
-        {
-            Model4 model = new Model4
-            {
-                Type = "TestType"
-            };
-
-            return await eh.AddEntityAsync(model);
-        }
-
-        public static async Task<PotentialFuture<string>> TestFuture(EntityHelper eh ,Queue<MockFuture> q)
+        public static async Task<PotentialFuture<string>> TestFuture(IDependencyResolver eh ,Queue<MockFuture> q)
         {
             switch(q.Count)
             {
@@ -166,26 +156,23 @@ namespace DeferredEntityHelperSample
 
         public async ValueTask AllParamWaitForPromiseTestAsync()
         {
-            using (SampleContext context = new SampleContext())
+            DependencyResolver dr = new DependencyResolver();
+
+            MockFuture[] mf = new MockFuture[16];
+            for(int i = 0;i < mf.Length; i++)
             {
-                await using (EntityHelper eh = new EntityHelper(context))
-                {
-
-                    MockFuture[] mf = new MockFuture[16];
-                    for(int i = 0;i < mf.Length; i++)
-                    {
-                        mf[i] = new MockFuture();
-                        Queue<MockFuture> q = new Queue<MockFuture>(mf.Take(i + 1));
-                        await TestFuture(eh,q);
-                    }
-
-                    for (int i = 0; i < mf.Length; i++)
-                    {
-                        mf[i].Item = "Resolve: " + i;
-                        mf[i].Resolved = true;
-                    }
-                }
+                mf[i] = new MockFuture();
+                Queue<MockFuture> q = new Queue<MockFuture>(mf.Take(i + 1));
+                await TestFuture(dr,q);
             }
+
+            for (int i = 0; i < mf.Length; i++)
+            {
+                mf[i].Item = "Resolve: " + i;
+                mf[i].Resolved = true;
+            }
+
+            Assert.IsTrue(await dr.TriggerResolve());
         }
 
 
