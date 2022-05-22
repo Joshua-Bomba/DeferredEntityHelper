@@ -30,6 +30,14 @@ namespace DeferredEntityHelper.Futures
             return !_def.Any();
         }
 
+        public async Task TriggerResolves(Func<Task> resolveOperation)
+        {
+            do
+            {
+                await resolveOperation();
+            }while(await TriggerResolve());
+        }
+
         public async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class
         {
             if (!callback.DepedenciesResolved())

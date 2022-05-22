@@ -10,6 +10,8 @@ namespace DeferredEntityHelper.Futures
     public interface IDependencyResolver
     {
         Task<bool> TriggerResolve();
+
+        Task TriggerResolves(Func<Task> resolveOperation);
         void AddUnresolvedElement(IFutureEvent f);
         Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class;
     }

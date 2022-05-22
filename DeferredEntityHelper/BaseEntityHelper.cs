@@ -50,11 +50,7 @@ namespace DeferredEntityHelper
         public virtual async Task SaveChangesAsync()
         {
             await _cacheManager.EnsureReadersAreFinished();
-            do
-            {
-                await this.Context.SaveChangesAsync();
-                
-            } while (await TriggerResolve());
+            await TriggerResolves(async () => await this.Context.SaveChangesAsync());
         }
 
         public virtual async Task DeleteEntityAsync<TProp>(TProp e) where TProp : class
