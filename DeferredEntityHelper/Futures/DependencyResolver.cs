@@ -32,7 +32,7 @@ namespace DeferredEntityHelper.Futures
             HashSet<IFutureEvent> refs = _def;
             _def = new HashSet<IFutureEvent>();
             foreach (IFutureEvent p in refs)
-                p.SavedChangesTriggered();
+                p.DependencyResolvedTrigger();
             foreach (IFutureEvent p in refs)
                 await p.Process();
             return !_def.Any();

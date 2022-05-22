@@ -10,7 +10,7 @@ namespace DeferredEntityHelper.Futures
     public class FutureDetermined<T> : Future<T> where T : class
     {
         private IFutureCallback<T> _callback;
-        public FutureDetermined(T key, IFutureCallback<T> callback, IDependencyResolver efHelper) : base(key, efHelper)
+        public FutureDetermined(T key, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(key, dependencyResolver)
         {
             _callback = callback;
         }

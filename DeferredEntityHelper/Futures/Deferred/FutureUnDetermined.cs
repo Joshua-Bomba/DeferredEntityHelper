@@ -11,13 +11,13 @@ namespace DeferredEntityHelper.Futures
     {
         private IFutureCallback<T> _callback;
         private PotentialFuture<T> _next;
-        public FutureUnDetermined(IFutureCallback<T> callback, IDependencyResolver efHelper) : base(null, efHelper)
+        public FutureUnDetermined(IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(null, dependencyResolver)
         {
             _callback = callback;
             _next = null;
         }
 
-        public override void SavedChangesTriggered()
+        public override void DependencyResolvedTrigger()
         {
 
         }
@@ -33,12 +33,12 @@ namespace DeferredEntityHelper.Futures
                 }
                 else
                 {
-                    this._efHelper.AddUnresolvedElement(this);
+                    this._dependencyResolver.AddUnresolvedElement(this);
                 }
             }
             else if (!_callback.DepedenciesResolved())
             {
-                this._efHelper.AddUnresolvedElement(this);//we will have it go around again till the promises we are waiting on are resolved
+                this._dependencyResolver.AddUnresolvedElement(this);//we will have it go around again till the promises we are waiting on are resolved
             }
             else
             {
@@ -47,7 +47,7 @@ namespace DeferredEntityHelper.Futures
                 if (!p.Resolved)
                 {
                     _next = p;
-                    this._efHelper.AddUnresolvedElement(this);
+                    this._dependencyResolver.AddUnresolvedElement(this);
                 }
                 else
                 {

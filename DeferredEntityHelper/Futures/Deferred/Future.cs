@@ -8,12 +8,12 @@ namespace DeferredEntityHelper.Futures
 {
     public abstract class Future<T> : PotentialFuture<T>, IFutureEvent where T : class
     {
-        protected IDependencyResolver _efHelper;
+        protected IDependencyResolver _dependencyResolver;
         protected bool _resolved;
-        public Future(T data, IDependencyResolver efHelper) : base(data)
+        public Future(T data, IDependencyResolver dependencyResolver) : base(data)
         {
             _resolved = false;
-            _efHelper = efHelper;
+            _dependencyResolver = dependencyResolver;
         }
 
         public override bool Resolved => _resolved;
@@ -22,13 +22,13 @@ namespace DeferredEntityHelper.Futures
         {
             if (!_resolved)
             {
-                await _efHelper.TriggerResolve();
+                await _dependencyResolver.TriggerResolve();
             }
             return _data;
         }
 
         public abstract Task Process();
 
-        public virtual void SavedChangesTriggered() => _resolved = true;
+        public virtual void DependencyResolvedTrigger() => _resolved = true;
     }
 }

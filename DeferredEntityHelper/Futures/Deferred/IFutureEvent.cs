@@ -9,6 +9,6 @@ namespace DeferredEntityHelper.Futures
     public interface IFutureEvent : IFuture
     {
         Task Process();
-        void SavedChangesTriggered();
+        void DependencyResolvedTrigger();
     }
 }
