@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.Futures
 {
+    //don't think we can use an interface because of the implict cast stuff I would like to keep
     public interface IFutureDetermined : IFuture 
     {
         static IFutureDetermined<TProp> Wrap<TProp>(TProp el) where TProp : class => new FutureWrapper<TProp>(el);
