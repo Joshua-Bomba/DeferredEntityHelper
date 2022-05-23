@@ -17,9 +17,9 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _keyGetter = keyGetter;
         }
 
-        private async ValueTask _SetupTask(DbContext context)
+        private async ValueTask _SetupTask(IBaseEntityHelper context)
         {
-            IAsyncEnumerator<TModel> en = context.Set<TModel>().GetAsyncEnumerator();
+            IAsyncEnumerator<TModel> en = context.GetAllEntitiesOfType<TModel>();
             while (await en.MoveNextAsync())
             {
                 
@@ -27,7 +27,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             }
         }
 
-        public ValueTask SetupCacheSetFromDb(DbContext context)
+        public ValueTask SetupCacheSetFromDb(IBaseEntityHelper context)
         {
             _setupTask = _SetupTask(context);
             return _setupTask;
