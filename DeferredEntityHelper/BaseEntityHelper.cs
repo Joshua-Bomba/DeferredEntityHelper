@@ -11,33 +11,23 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper
 {
-    public class BaseEntityHelper<T> : BaseEntityHelper where T : DbContext
+
+    public class BaseEntityHelper<T> : DependencyResolver,  IAsyncDisposable, IBaseEntityHelper where T : DbContext
     {
         protected T _context;
+        protected EntityCacheManager _cacheManager;
         public BaseEntityHelper(T context)
         {
             _context = context;
             SetupCacheManager();
         }
 
-        public override T Context => _context;
-    }
-
-
-    public abstract class BaseEntityHelper : DependencyResolver,  IAsyncDisposable, IBaseEntityHelper
-    {
-        protected EntityCacheManager _cacheManager;
-        public BaseEntityHelper()
-        {
-
-        }
+        public virtual T Context => _context;
 
         protected virtual void SetupCacheManager()
         {
             _cacheManager = new EntityCacheManager(this);
         }
-
-        public abstract DbContext Context { get; }
 
         public virtual async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
         {
