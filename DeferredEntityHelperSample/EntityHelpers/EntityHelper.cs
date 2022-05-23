@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelperSample.EntityHelpers
 {
-    public partial class EntityHelper : BaseEntityHelper<SampleContext>
+    public partial class EntityHelper : ConcurrentBaseEntityHelper<SampleContext>
     {
         public EntityHelper(SampleContext context) : base(context) { }
     }

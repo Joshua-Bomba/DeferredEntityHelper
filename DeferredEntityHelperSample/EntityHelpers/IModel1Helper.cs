@@ -11,6 +11,8 @@ namespace DeferredEntityHelperSample.EntityHelpers
     public interface IModel1Helper
     {
         Task<PotentialFuture<Model1>> CreateModel1(string somethingUnique, PotentialFuture<Model4> model4);
+
+        Task<PotentialFuture<Model1>> CreateModel1(string somethingUnique);
     }
 
 
@@ -38,6 +40,16 @@ namespace DeferredEntityHelperSample.EntityHelpers
                 //let's add the entity
                 return await this.AddEntityAsync(model1);
             },model4);
+        }
+
+        async Task<PotentialFuture<Model1>> IModel1Helper.CreateModel1(string somethingUnique)
+        {
+            Model1 model1 = new Model1
+            {
+                SomethingUnique = somethingUnique
+            };
+            //let's add the entity
+            return await this.AddEntityAsync(model1);
         }
     }
 }
