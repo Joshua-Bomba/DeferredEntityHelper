@@ -15,19 +15,19 @@ namespace DeferredEntityHelper.Futures
             _def = new HashSet<IFutureEvent>();
         }
 
-        public FutureDetermined<TProp> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
+        public virtual FutureDetermined<TProp> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
         {
             FutureDetermined<TProp> save = new FutureDetermined<TProp>(el, callback, this);
             _def.Add(save);
             return save;
         }
 
-        public void AddUnresolvedElement(IFutureEvent f)
+        public virtual void AddUnresolvedElement(IFutureEvent f)
         {
             _def.Add(f);
         }
 
-        public async Task<bool> TriggerResolve()
+        public virtual async Task<bool> TriggerResolve()
         {
             HashSet<IFutureEvent> refs = _def;
             _def = new HashSet<IFutureEvent>();
@@ -38,7 +38,7 @@ namespace DeferredEntityHelper.Futures
             return !_def.Any();
         }
 
-        public async Task TriggerResolves(Func<Task> resolveOperation)
+        public virtual async Task TriggerResolves(Func<Task> resolveOperation)
         {
             do
             {
@@ -46,7 +46,7 @@ namespace DeferredEntityHelper.Futures
             }while(!await TriggerResolve());
         }
 
-        public async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class
+        public virtual async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class
         {
             if (!callback.DepedenciesResolved())
             {

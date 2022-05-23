@@ -56,12 +56,12 @@ namespace DeferredEntityHelper
             this.Context.Set<TProp>().Remove(e);
         }
 
-        public async ValueTask DisposeAsync()
+        public virtual async ValueTask DisposeAsync()
         {
             await SaveChangesAsync();
         }
 
-        public IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>() where TProp : class
+        public virtual IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>() where TProp : class
         {
             return this.Context.Set<TProp>().GetAsyncEnumerator();
         }
