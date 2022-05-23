@@ -11,10 +11,10 @@ namespace DeferredEntityHelper.IndexedCachedModels
     public class EntityCache<T> : IEntityCache where T : class
     {
         private Dictionary<Type, IEntityCacheIndexed<T>> _cacheSets;
-        private DbContext _dbContext;
+        private IBaseEntityHelper _dbContext;
         private IEntityCacheManagerContextTracking _contextTracking;
 
-        public EntityCache(DbContext context, IEntityCacheManagerContextTracking contextTracking)
+        public EntityCache(IBaseEntityHelper context, IEntityCacheManagerContextTracking contextTracking)
         {
             _cacheSets = new Dictionary<Type, IEntityCacheIndexed<T>>();
             _dbContext = context;

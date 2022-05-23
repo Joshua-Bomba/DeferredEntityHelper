@@ -24,7 +24,7 @@ namespace DeferredEntityHelper
     }
 
 
-    public abstract partial class BaseEntityHelper : DependencyResolver,  IAsyncDisposable 
+    public abstract class BaseEntityHelper : DependencyResolver,  IAsyncDisposable, IBaseEntityHelper
     {
         protected EntityCacheManager _cacheManager;
         public BaseEntityHelper()
@@ -34,7 +34,7 @@ namespace DeferredEntityHelper
 
         protected virtual void SetupCacheManager()
         {
-            _cacheManager = new EntityCacheManager(Context);
+            _cacheManager = new EntityCacheManager(this);
         }
 
         public abstract DbContext Context { get; }
@@ -69,6 +69,11 @@ namespace DeferredEntityHelper
         public async ValueTask DisposeAsync()
         {
             await SaveChangesAsync();
+        }
+
+        public IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>() where TProp : class
+        {
+            return this.Context.Set<TProp>().GetAsyncEnumerator();
         }
     }
 }

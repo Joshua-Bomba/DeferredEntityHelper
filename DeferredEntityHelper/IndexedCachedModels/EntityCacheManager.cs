@@ -16,9 +16,9 @@ namespace DeferredEntityHelper.IndexedCachedModels
     public class EntityCacheManager : IEntityCacheManagerContextTracking
     {
         private Dictionary<Type, IEntityCache> _cachedItems;
-        private DbContext _context;
+        private IBaseEntityHelper _context;
         private List<ValueTask> _contextTasks;
-        public EntityCacheManager(DbContext context)
+        public EntityCacheManager(IBaseEntityHelper context)
         {
             _context = context;
             _cachedItems = new Dictionary<Type, IEntityCache>();
