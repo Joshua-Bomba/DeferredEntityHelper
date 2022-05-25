@@ -27,7 +27,7 @@ namespace DeferredEntityHelper.Futures
             return _data;
         }
 
-        public abstract Task Process();
+        public abstract Task<IEnumerable<IFutureEvent>> Process();
 
         public virtual void DependencyResolvedTrigger() => _resolved = true;
     }

@@ -34,7 +34,15 @@ namespace DeferredEntityHelper.Futures
             foreach (IFutureEvent p in refs)
                 p.DependencyResolvedTrigger();
             foreach (IFutureEvent p in refs)
-                await p.Process();
+            {
+                IEnumerable<IFutureEvent>? unresolved = await p.Process();
+                if(unresolved != null)
+                {
+                    foreach(IFutureEvent f in unresolved)
+                        _def.Add(f);
+                }
+            }
+                
             return !_def.Any();
         }
 

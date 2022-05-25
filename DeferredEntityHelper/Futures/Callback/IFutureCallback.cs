@@ -10,6 +10,8 @@ namespace DeferredEntityHelper.Futures.Callback
     {
         bool DepedenciesResolved();
 
+        IEnumerable<IFutureEvent> GetUnResolvedElements();
+
         Task<PotentialFuture<T>> Callback(IFuture<T>? context);
     }
 }

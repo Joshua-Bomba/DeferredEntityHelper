@@ -18,5 +18,10 @@ namespace DeferredEntityHelper.Futures.Callback
         public async Task<PotentialFuture<T>> Callback(IFuture<T> resolved) => await _func();
 
         public bool DepedenciesResolved() => !_wait.Any(x => !x.Resolved);
+
+        public IEnumerable<IFutureEvent> GetUnResolvedElements()
+        {
+            return _wait.Where(x => !x.Resolved).Cast<IFutureEvent>();
+        }
     }
 }

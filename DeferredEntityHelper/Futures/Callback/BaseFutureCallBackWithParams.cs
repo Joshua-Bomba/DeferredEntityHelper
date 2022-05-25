@@ -30,6 +30,11 @@ namespace DeferredEntityHelper.Futures.Callback
 
         public bool DepedenciesResolved() => !_e.Any(x => !x.Resolved);
 
+        public IEnumerable<IFutureEvent> GetUnResolvedElements()
+        {
+            return _e.Where(x => !x.Resolved).Cast<IFutureEvent>();
+        }
+
 
     }
 }
