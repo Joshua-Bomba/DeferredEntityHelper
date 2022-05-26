@@ -19,11 +19,12 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         private async ValueTask _SetupTask(IBaseEntityHelper context)
         {
+            //hmm were going to have to grab the expression from the constructor and add a null check that way 
             IAsyncEnumerator<TModel> en = context.GetAllEntitiesOfType<TModel>();
             while (await en.MoveNextAsync())
             {
                 
-                this[_keyGetter(en.Current)] = IFutureDetermined.Wrap(en.Current);
+                    this[_keyGetter(en.Current)] = IFutureDetermined.Wrap(en.Current);
             }
         }
 
@@ -35,7 +36,12 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public void Add(IFutureDetermined<TModel> entity)
         {
-            this[_keyGetter(entity.GetItem())] = entity;
+            if(entity != null)
+            {
+                TModel? i = entity.GetItem();
+                if (i != null)
+                    this[_keyGetter(i)] = entity;
+            }
         }
 
         private async ValueTask _SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
