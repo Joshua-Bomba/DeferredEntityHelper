@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.IndexedCachedModels
 {
-    public class EntityCacheIndexed<TModel, TModelAccessKey> : Dictionary<TModelAccessKey, IFutureDetermined<TModel>>, IEntityCacheIndexed<TModel>, ICachedModelAccess<TModelAccessKey, TModel> where TModel : class where TModelAccessKey : notnull
+    public class EntityCacheIndexed<TModel, TModelAccessKey> : Dictionary<TModelAccessKey, IFutureDetermined<TModel>>, IEntityCacheIndexed<TModel>, ICachedModelAccess<TModelAccessKey, TModel> where TModel : class
     {
         private Func<TModel, TModelAccessKey> _keyGetter;
         private ValueTask _setupTask;
@@ -20,11 +20,13 @@ namespace DeferredEntityHelper.IndexedCachedModels
         private async ValueTask _SetupTask(IBaseEntityHelper context)
         {
             //hmm were going to have to grab the expression from the constructor and add a null check that way 
+            //... or we can just check after we get the data back from the database <- this option seems like less work
             IAsyncEnumerator<TModel> en = context.GetAllEntitiesOfType<TModel>();
             while (await en.MoveNextAsync())
             {
-                
-                    this[_keyGetter(en.Current)] = IFutureDetermined.Wrap(en.Current);
+                TModelAccessKey? tr = _keyGetter(en.Current);
+                if (tr != null)
+                    this[tr] = IFutureDetermined.Wrap(en.Current);
             }
         }
 

@@ -24,7 +24,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _cachedItems = new Dictionary<Type, IEntityCache>();
             _contextTasks = new List<ValueTask>();
         }
-        public virtual async ValueTask<ICachedModelAccess<TKey, TValue>> GetCachedIndexedDictionary<TKey, TValue>(Func<TValue, TKey> indexer) where TValue : class where TKey : notnull
+        public virtual async ValueTask<ICachedModelAccess<TKey, TValue>> GetCachedIndexedDictionary<TKey, TValue>(Func<TValue, TKey> indexer) where TValue : class
         {
             Type tValType = typeof(TValue);
             EntityCache<TValue> ec;

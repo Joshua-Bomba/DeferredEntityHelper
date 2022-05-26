@@ -21,7 +21,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _contextTracking = contextTracking;
         }
 
-        public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer) where TKey : notnull
+        public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer)
         {
             Type keyType = typeof(TKey);
 
