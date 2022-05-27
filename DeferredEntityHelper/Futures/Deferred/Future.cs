@@ -36,7 +36,7 @@ namespace DeferredEntityHelper.Futures
             return this.GetItem();
         }
 
-        protected IEnumerable<IFutureEvent> GetUnresolvedDepedencies()
+        protected IEnumerable<IFutureEvent>? GetUnresolvedDepedencies()
         {
             if(!_futureCallback.DepedenciesResolved())
             {
@@ -63,6 +63,15 @@ namespace DeferredEntityHelper.Futures
 
         protected virtual bool ProcessNextElement()
         {
+            if (!_entityResolved)
+                return false;
+
+            if(_futureCallback == null)
+            {
+                _fullyResolved = true;
+                return false;
+            }
+
             if (_next != null)
             {
                 if (_next.Resolved)
@@ -82,14 +91,16 @@ namespace DeferredEntityHelper.Futures
 
         public async Task<IEnumerable<IFutureEvent>?> Process()
         {
-            if (!_entityResolved&& !ProcessNextElement())
+            if (_fullyResolved)
+                return null;
+
+            if (!ProcessNextElement())
             {
                 return new IFutureEvent[] { this };
             }
             IEnumerable<IFutureEvent>? deps =  GetUnresolvedDepedencies();
             if (deps != null)
                 return deps;
-
             PotentialFuture<T> p = await _futureCallback.Callback(this);
             _futureCallback = null;
             if (!p.Resolved)
