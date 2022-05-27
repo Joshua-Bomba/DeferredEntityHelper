@@ -43,11 +43,15 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public void NewEntityAdded<TProp>(IFutureDetermined<TProp> e) where TProp : class
         {
-            Type entityType = typeof(TProp);
-            if (_cachedItems.ContainsKey(entityType))
+            if(e != null)
             {
-                _cachedItems[entityType].Add(e);
+                Type entityType = typeof(TProp);
+                if (_cachedItems.ContainsKey(entityType))
+                {
+                    _cachedItems[entityType].Add(e);
+                }
             }
+
         }
 
         public async ValueTask EnsureReadersAreFinished()
