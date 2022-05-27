@@ -66,12 +66,6 @@ namespace DeferredEntityHelper.Futures
             if (!_entityResolved)
                 return false;
 
-            if(_futureCallback == null)
-            {
-                _fullyResolved = true;
-                return false;
-            }
-
             if (_next != null)
             {
                 if (_next.Resolved)
@@ -85,6 +79,12 @@ namespace DeferredEntityHelper.Futures
                     return false;
                 }
             }
+            if (_futureCallback == null)
+            {
+                _fullyResolved = true;
+                return false;
+            }
+
             return true;
         }
 
