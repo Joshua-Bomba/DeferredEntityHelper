@@ -10,11 +10,9 @@ namespace DeferredEntityHelper.Futures.Callback
     {
         protected IFuture[] _e;
         protected CB _cb;
-        private byte _enumCount;
         public BaseFutureCallBackWithParams(CB cb) 
         {
             _cb = cb;
-            _enumCount = 0;
         }
 
         public virtual IFutureCallback<T> AttachItems(params IFuture[] items)
@@ -22,10 +20,10 @@ namespace DeferredEntityHelper.Futures.Callback
             _e = items;
             return this;
         }
-
-        protected virtual TResult GetItem<TResult>() where TResult : class => (TResult)_e[_enumCount++].GetItem();
+        protected virtual TResult GetItem<TResult>(int index) where TResult : class => (TResult)_e[index].GetItem();
 
         public abstract Task<PotentialFuture<T>> Callback();
+
         async Task<PotentialFuture<T>> IFutureCallback<T>.Callback(IFuture<T> context) => await Callback();
 
         public bool DepedenciesResolved() => !_e.Any(x => !x.Resolved);
