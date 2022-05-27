@@ -22,11 +22,17 @@ namespace DeferredEntityHelper.IndexedCachedModels
             //hmm were going to have to grab the expression from the constructor and add a null check that way 
             //... or we can just check after we get the data back from the database <- this option seems like less work
             IAsyncEnumerator<TModel> en = context.GetAllEntitiesOfType<TModel>();
+            TModel c;
             while (await en.MoveNextAsync())
             {
-                TModelAccessKey? tr = _keyGetter(en.Current);
-                if (tr != null)
-                    this[tr] = IFutureDetermined.Wrap(en.Current);
+                c = en.Current;
+                if(c != null)
+                {
+                    TModelAccessKey? tr = _keyGetter(c);
+                    if (tr != null)
+                        this[tr] = IFutureDetermined.Wrap(c);
+                }
+
             }
         }
 
@@ -42,7 +48,11 @@ namespace DeferredEntityHelper.IndexedCachedModels
             {
                 TModel? i = entity.GetItem();
                 if (i != null)
-                    this[_keyGetter(i)] = entity;
+                {
+                    TModelAccessKey? key = _keyGetter(i);
+                    if(key != null)
+                        this[key] = entity;
+                }
             }
         }
 
@@ -51,7 +61,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             await relatedSet.Finished();
             foreach (IFutureDetermined<TModel> entity in relatedSet.GetData())
             {
-                this[_keyGetter(entity.GetItem())] = entity;
+                Add(entity);
             }
         }
 

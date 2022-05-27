@@ -55,9 +55,11 @@ namespace DeferredEntityHelper.IndexedCachedModels
             if (_cacheSets.Any())
             {
                 if(t is IFutureDetermined<T> prop)
-                foreach (KeyValuePair<Type, IEntityCacheIndexed<T>> kv in _cacheSets)
                 {
-                    kv.Value.Add(prop);
+                    foreach (KeyValuePair<Type, IEntityCacheIndexed<T>> kv in _cacheSets)
+                    {
+                        kv.Value.Add(prop);
+                    }
                 }
             }
         }
