@@ -9,20 +9,9 @@ namespace DeferredEntityHelper.Futures
 {
     public class FutureDetermined<T> : Future<T>, IFutureDetermined<T> where T : class
     {
-        private IFutureCallback<T> _callback;
-        public FutureDetermined(T key, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(key, dependencyResolver)
+        public FutureDetermined(T key, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(key,callback, dependencyResolver)
         {
-            _callback = callback;
-        }
 
-        public override async Task<IEnumerable<IFutureEvent>?> Process()
-        {
-            Task? t = this._callback?.Callback(this);
-            if (t != null)
-            {
-                await t;
-            }
-            return null;
         }
 
         PotentialFuture<T> IFutureDetermined<T>.AsPotentialFuture() => this;
