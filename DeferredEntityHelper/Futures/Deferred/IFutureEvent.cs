@@ -8,7 +8,7 @@ namespace DeferredEntityHelper.Futures
 {
     public interface IFutureEvent : IFuture
     {
-        Task Process();
+        Task<IEnumerable<IFutureEvent>?> Process();
         void DependencyResolvedTrigger();
     }
 }

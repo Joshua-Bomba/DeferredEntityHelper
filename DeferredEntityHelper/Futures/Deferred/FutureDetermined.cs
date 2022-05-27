@@ -15,13 +15,14 @@ namespace DeferredEntityHelper.Futures
             _callback = callback;
         }
 
-        public override async Task Process()
+        public override async Task<IEnumerable<IFutureEvent>?> Process()
         {
             Task? t = this._callback?.Callback(this);
             if (t != null)
             {
                 await t;
             }
+            return null;
         }
 
         PotentialFuture<T> IFutureDetermined<T>.AsPotentialFuture() => this;

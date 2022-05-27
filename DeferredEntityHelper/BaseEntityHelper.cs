@@ -61,9 +61,16 @@ namespace DeferredEntityHelper
             await SaveChangesAsync();
         }
 
-        public virtual IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>() where TProp : class
+        public virtual IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>(Func<IQueryable<TProp>, IQueryable<TProp>>? f = null) where TProp : class
         {
-            return this.Context.Set<TProp>().GetAsyncEnumerator();
+            if(f != null)
+            {
+                return this.Context.Set<TProp>().GetAsyncEnumerator();
+            }
+            else
+            {
+                return f(this.Context.Set<TProp>()).AsAsyncEnumerable().GetAsyncEnumerator();
+            }
         }
     }
 }

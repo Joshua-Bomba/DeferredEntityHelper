@@ -22,7 +22,7 @@ namespace DeferredEntityHelper.Futures
 
         }
 
-        public async override Task Process()
+        public async override Task<IEnumerable<IFutureEvent>?> Process()
         {
             if (_next != null)
             {
@@ -30,15 +30,17 @@ namespace DeferredEntityHelper.Futures
                 {
                     _data = _next.GetItem();
                     _resolved = true;
+                    _next = null;
                 }
                 else
                 {
-                    this._dependencyResolver.AddUnresolvedElement(this);
+                    return new IFutureEvent[] { this };
                 }
             }
             else if (!_callback.DepedenciesResolved())
             {
-                this._dependencyResolver.AddUnresolvedElement(this);//we will have it go around again till the promises we are waiting on are resolved
+                List<IFutureEvent> ev = new List<IFutureEvent> { this };
+                ev.AddRange(_callback.GetUnResolvedElements());
             }
             else
             {
@@ -47,14 +49,22 @@ namespace DeferredEntityHelper.Futures
                 if (!p.Resolved)
                 {
                     _next = p;
-                    this._dependencyResolver.AddUnresolvedElement(this);
+                    if(p is IFutureEvent ev)
+                    {
+                        return new IFutureEvent[] { this, ev };
+                    }
+                    else
+                    {
+                        throw new NotSupportedException();
+                    }
                 }
                 else
                 {
-                    _data =p.GetItem();
+                    _data = p.GetItem();
                     _resolved = true;
                 }
             }
+            return null;
         }
     }
 }

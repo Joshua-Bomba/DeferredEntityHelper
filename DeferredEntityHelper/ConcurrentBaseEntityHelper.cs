@@ -27,12 +27,17 @@ namespace DeferredEntityHelper
         }
 
 
-        public override async IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>()
+        public override async IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>(Func<IQueryable<TProp>,IQueryable<TProp>>? f = null)
         {
             TProp[] el;
             using (await _lock.LockAsync())
             {
-                el = await this.Context.Set<TProp>().ToArrayAsync();
+                if (f == null)
+                {
+                    el = await this.Context.Set<TProp>().ToArrayAsync();
+                }
+                else
+                    el = await f(this.Context.Set<TProp>()).ToArrayAsync();
             }
 
             foreach (TProp e in el)

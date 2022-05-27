@@ -24,7 +24,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _cachedItems = new Dictionary<Type, IEntityCache>();
             _contextTasks = new List<ValueTask>();
         }
-        public virtual async ValueTask<ICachedModelAccess<TKey, TValue>> GetCachedIndexedDictionary<TKey, TValue>(Func<TValue, TKey> indexer) where TValue : class where TKey : notnull
+        public virtual async ValueTask<ICachedModelAccess<TKey, TValue>> GetCachedIndexedDictionary<TKey, TValue>(Func<TValue, TKey> indexer) where TValue : class
         {
             Type tValType = typeof(TValue);
             EntityCache<TValue> ec;
@@ -43,11 +43,15 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public void NewEntityAdded<TProp>(IFutureDetermined<TProp> e) where TProp : class
         {
-            Type entityType = typeof(TProp);
-            if (_cachedItems.ContainsKey(entityType))
+            if(e != null)
             {
-                _cachedItems[entityType].Add(e);
+                Type entityType = typeof(TProp);
+                if (_cachedItems.ContainsKey(entityType))
+                {
+                    _cachedItems[entityType].Add(e);
+                }
             }
+
         }
 
         public async ValueTask EnsureReadersAreFinished()

@@ -11,6 +11,6 @@ namespace DeferredEntityHelper
     {
         Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class;
 
-        IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>() where TProp : class;
+        IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>(Func<IQueryable<TProp>, IQueryable<TProp>>? f = null) where TProp : class;
     }
 }
