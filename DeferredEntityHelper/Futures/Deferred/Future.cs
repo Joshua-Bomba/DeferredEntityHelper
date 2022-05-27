@@ -11,21 +11,23 @@ namespace DeferredEntityHelper.Futures
     {
         protected IDependencyResolver _dependencyResolver;
         protected IFutureCallback<T> _futureCallback;
-        protected bool _resolved;
+        protected bool _fullyResolved;
+        protected bool _entityResolved;
         protected PotentialFuture<T> _next;
         public Future(T data, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(data)
         {
-            _resolved = false;
+            _fullyResolved = false;
+            _entityResolved = false;
             _dependencyResolver = dependencyResolver;
             _futureCallback = callback;
             _next = null;
         }
 
-        public override bool Resolved => _resolved;
+        public override bool Resolved => _fullyResolved;
 
         public override async Task<T> ForceResolveAndGetItem()
         {
-            if (!_resolved)
+            if (!_fullyResolved)
             {
                 await _dependencyResolver.TriggerResolve();
             }
@@ -45,12 +47,16 @@ namespace DeferredEntityHelper.Futures
 
         public async Task<IEnumerable<IFutureEvent>?> Process()
         {
+            if (!_entityResolved)
+            {
+                return new IFutureEvent[] { this };
+            }
             if (_next != null)
             {
                 if (_next.Resolved)
                 {
                     _data = _next.GetItem();
-                    _resolved = true;
+                    _fullyResolved = true;
                     _next = null;
                 }
                 else
@@ -61,6 +67,7 @@ namespace DeferredEntityHelper.Futures
             IEnumerable<IFutureEvent>? deps =  GetUnresolvedDepedencies();
             if (deps != null)
                 return deps;
+
             PotentialFuture<T> p = await _futureCallback.Callback(this);
             _futureCallback = null;
             if (!p.Resolved)
@@ -78,14 +85,12 @@ namespace DeferredEntityHelper.Futures
             else
             {
                 _data = p.GetItem();
-                _resolved = true;
+                _fullyResolved = true;
             }
             return null;
         }
 
-
-
-        public virtual void DependencyResolvedTrigger() => _resolved = true;
+        public virtual void DependencyResolvedTrigger() => _entityResolved = true;
 
 
     }
