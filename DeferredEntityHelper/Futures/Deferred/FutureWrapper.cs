@@ -8,14 +8,17 @@ namespace DeferredEntityHelper.Futures
 {
     public class FutureWrapper<T> : PotentialFuture<T>, IFutureDetermined<T> where T : class
     {
-
-        public FutureWrapper(T t) : base(t) { }
+        private T _model;
+        public FutureWrapper(T t) : base()
+        {
+            _model = t;
+        }
         public override bool Resolved => true;
 
         public PotentialFuture<T> AsPotentialFuture() => this;
 
-        public async override Task<T> ForceResolveAndGetItem() => _data;
+        public async override Task<T> ForceResolveAndGetItem() => _model;
 
-       
+        public override T GetItem() => _model;
     }
 }

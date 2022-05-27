@@ -8,23 +8,15 @@ namespace DeferredEntityHelper.Futures
 {
     public abstract class PotentialFuture<T> : IFuture<T> where T : class
     {
-        protected T _data;
-        public PotentialFuture(T data)
-        {
-            _data = data;
-        }
+        public PotentialFuture() { }
 
-        public T GetItem()
-        {
-            return _data;
-        }
+        public abstract T GetItem();
 
         object IFuture.GetItem() => this.GetItem();
 
         public abstract bool Resolved { get; }
 
         public abstract Task<T> ForceResolveAndGetItem();
-
 
         public static implicit operator PotentialFuture<T>(T t) => new FutureWrapper<T>(t);
     }

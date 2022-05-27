@@ -9,13 +9,14 @@ namespace DeferredEntityHelper.Futures
 {
     public class FutureUnDetermined<T> : Future<T> where T : class
     {
-        public FutureUnDetermined(IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(null,callback, dependencyResolver)
+        private T _model;
+        public FutureUnDetermined(IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(callback, dependencyResolver)
         {
+            _model = null;
         }
 
-        public override void DependencyResolvedTrigger()
-        {
+        public override T GetItem() => _model;
 
-        }
+        protected override void UpdateModel(T model) => _model = model;
     }
 }

@@ -14,7 +14,7 @@ namespace DeferredEntityHelper.Futures
         protected bool _fullyResolved;
         protected bool _entityResolved;
         protected PotentialFuture<T> _next;
-        public Future(T data, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(data)
+        public Future(IFutureCallback<T> callback, IDependencyResolver dependencyResolver): base()
         {
             _fullyResolved = false;
             _entityResolved = false;
@@ -25,13 +25,15 @@ namespace DeferredEntityHelper.Futures
 
         public override bool Resolved => _fullyResolved;
 
+        protected abstract void UpdateModel(T model);
+
         public override async Task<T> ForceResolveAndGetItem()
         {
             if (!_fullyResolved)
             {
                 await _dependencyResolver.TriggerResolve();
             }
-            return _data;
+            return this.GetItem();
         }
 
         protected IEnumerable<IFutureEvent> GetUnresolvedDepedencies()
@@ -45,24 +47,44 @@ namespace DeferredEntityHelper.Futures
             return null;
         }
 
-        public async Task<IEnumerable<IFutureEvent>?> Process()
+
+        protected virtual IEnumerable<IFutureEvent>? HandleNextElement(PotentialFuture<T> add)
         {
-            if (!_entityResolved)
+            _next = add;
+            if (add is IFutureEvent ev)
             {
-                return new IFutureEvent[] { this };
+                return new IFutureEvent[] { this, ev };
             }
+            else
+            {
+                throw new NotSupportedException();
+            }
+        }
+
+        protected virtual bool ProcessNextElement()
+        {
             if (_next != null)
             {
                 if (_next.Resolved)
                 {
-                    _data = _next.GetItem();
+                    UpdateModel(_next.GetItem());
                     _fullyResolved = true;
                     _next = null;
                 }
                 else
                 {
-                    return new IFutureEvent[] { this };
+                    return false;
                 }
+            }
+            return true;
+        }
+
+
+        public async Task<IEnumerable<IFutureEvent>?> Process()
+        {
+            if (!_entityResolved&& !ProcessNextElement())
+            {
+                return new IFutureEvent[] { this };
             }
             IEnumerable<IFutureEvent>? deps =  GetUnresolvedDepedencies();
             if (deps != null)
@@ -72,19 +94,11 @@ namespace DeferredEntityHelper.Futures
             _futureCallback = null;
             if (!p.Resolved)
             {
-                _next = p;
-                if (p is IFutureEvent ev)
-                {
-                    return new IFutureEvent[] { this, ev };
-                }
-                else
-                {
-                    throw new NotSupportedException();
-                }
+                return HandleNextElement(p);                
             }
             else
             {
-                _data = p.GetItem();
+                UpdateModel(p.GetItem());
                 _fullyResolved = true;
             }
             return null;

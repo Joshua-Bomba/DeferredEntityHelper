@@ -9,10 +9,15 @@ namespace DeferredEntityHelper.Futures
 {
     public class FutureDetermined<T> : Future<T>, IFutureDetermined<T> where T : class
     {
-        public FutureDetermined(T key, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(key,callback, dependencyResolver)
+        private T _data;
+        public FutureDetermined(T data, IFutureCallback<T> callback, IDependencyResolver dependencyResolver) : base(callback, dependencyResolver)
         {
-
+            _data = data;
         }
+
+        public override T GetItem() => _data;
+
+        protected override void UpdateModel(T model) => _data = model;
 
         PotentialFuture<T> IFutureDetermined<T>.AsPotentialFuture() => this;
     }
