@@ -88,64 +88,64 @@ namespace DeferredEntityHelper.Futures
         //it get's worse the further you scroll
         #region Adapters
         private class FutureCallBackWithParams<R, P1> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1>> where R : class where P1 : class { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0));
         }
         private class FutureCallBackWithParams<R, P1,P2> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2>> where R : class where P1 : class where P2: class{ public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(),GetItem<P2>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1));
         }
         private class FutureCallBackWithParams<R, P1, P2,P3> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3>> where R : class where P1 : class where P2 : class where P3: class { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4>> where R : class where P1 : class where P2 : class where P3: class where P4 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class where P9 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class where P9 : class where P10 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>(),GetItem<P10>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8),GetItem<P10>(9));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class where P9 : class where P10 : class where P11 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>(),GetItem<P10>(),GetItem<P11>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8),GetItem<P10>(9),GetItem<P11>(10));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class where P9 : class where P10 : class where P11 : class where P12 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>(),GetItem<P10>(),GetItem<P11>(),GetItem<P12>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8),GetItem<P10>(9),GetItem<P11>(10),GetItem<P12>(11));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class where P9 : class where P10 : class where P11 : class where P12 : class where P13 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>(),GetItem<P10>(),GetItem<P11>(),GetItem<P12>(),GetItem<P13>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8),GetItem<P10>(9),GetItem<P11>(10),GetItem<P12>(11),GetItem<P13>(12));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class where P9 : class where P10 : class where P11 : class where P12 : class where P13 : class where P14 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>(),GetItem<P10>(),GetItem<P11>(),GetItem<P12>(),GetItem<P13>(), GetItem<P14>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8),GetItem<P10>(9),GetItem<P11>(10),GetItem<P12>(11),GetItem<P13>(12), GetItem<P14>(13));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5 : class where P6 : class where P7 : class where P8 : class where P9 : class where P10 : class where P11 : class where P12 : class where P13 : class where P14 : class where P15 : class
         { public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>(),GetItem<P10>(),GetItem<P11>(),GetItem<P12>(),GetItem<P13>(), GetItem<P14>(),GetItem<P15>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8),GetItem<P10>(9),GetItem<P11>(10),GetItem<P12>(11),GetItem<P13>(12), GetItem<P14>(13),GetItem<P15>(14));
         }
 		private class FutureCallBackWithParams<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15,P16> : BaseFutureCallBackWithParams<R, WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15,P16>> where R : class where P1 : class where P2 : class where P3: class where P4 : class where P5: class where P6 : class where P7 : class where P8  : class where P9 : class where P10 : class where P11 : class where P12 : class where P13 : class where P14 : class where P15 : class where P16 : class{ public FutureCallBackWithParams(WaitForPromiseCallback<R, P1, P2,P3,P4,P5,P6,P7,P8,P9,P10,P11,P12,P13,P14,P15,P16> cb) : base(cb) { }
-            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(), GetItem<P2>(),GetItem<P3>(),GetItem<P4>(),GetItem<P5>(),GetItem<P6>(),GetItem<P7>(),GetItem<P8>(),GetItem<P9>(),GetItem<P10>(),GetItem<P11>(),GetItem<P12>(),GetItem<P13>(), GetItem<P14>(), GetItem<P15>(),GetItem<P16>());
+            public async override Task<PotentialFuture<R>> Callback() => await _cb(GetItem<P1>(0), GetItem<P2>(1),GetItem<P3>(2),GetItem<P4>(3),GetItem<P5>(4),GetItem<P6>(5),GetItem<P7>(6),GetItem<P8>(7),GetItem<P9>(8),GetItem<P10>(9),GetItem<P11>(10),GetItem<P12>(11),GetItem<P13>(12), GetItem<P14>(13), GetItem<P15>(14),GetItem<P16>(15));
         }
 		
 
