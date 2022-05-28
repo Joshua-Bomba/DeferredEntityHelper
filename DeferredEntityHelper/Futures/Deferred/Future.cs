@@ -54,16 +54,7 @@ namespace DeferredEntityHelper.Futures
 
             if (_next != null)
             {
-                if (_next.Resolved)
-                {
-                    UpdateModel(_next.GetItem());
-                    _fullyResolved = true;
-                    _next = null;
-                }
-                else
-                {
-                    return false;
-                }
+                return FutureResolve(_next);
             }
             if (_futureCallback == null)
             {
