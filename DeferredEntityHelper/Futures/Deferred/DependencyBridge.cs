@@ -27,14 +27,14 @@ namespace DeferredEntityHelper.Futures
 
         public U GetItem() => _future.GetItem();
 
-        async Task<PotentialFuture<T>> IFutureCallback<T>.Callback(IFuture<T>? context)
+        async Task<IFuture> IFutureCallback<T>.Callback(IFuture<T>? context)
         {
             _resolvedElement = context?.GetItem();
             if (_resolvedElement != null && _func != null)
             {
                 _future = await _func(_resolvedElement);
             }
-            return _resolvedElement;
+            return this;
         }
 
         bool IFutureCallback<T>.DepedenciesResolved() => _future != null;
