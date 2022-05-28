@@ -12,6 +12,6 @@ namespace DeferredEntityHelper.Futures.Callback
 
         IEnumerable<IFutureEvent> GetUnResolvedElements();
 
-        Task<PotentialFuture<T>> Callback(IFuture<T>? context);
+        Task<IFuture> Callback(IFuture<T>? context);
     }
 }

@@ -76,7 +76,7 @@ namespace DeferredEntityHelper.Futures
                 return save;
             }
 
-            return await callback.Callback(null);
+            return (await callback.Callback(null)) as PotentialFuture<TProp>;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace DeferredEntityHelper.Futures.Callback
 
         public abstract Task<PotentialFuture<T>> Callback();
 
-        async Task<PotentialFuture<T>> IFutureCallback<T>.Callback(IFuture<T> context) => await Callback();
+        async Task<IFuture> IFutureCallback<T>.Callback(IFuture<T> context) => await Callback();
 
         public bool DepedenciesResolved() => !_e.Any(x => !x.Resolved);
 

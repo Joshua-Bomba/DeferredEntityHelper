@@ -13,14 +13,14 @@ namespace DeferredEntityHelper.Futures.Callback
         {
             _elementResolved = elementResolved;
         }
-        public async Task<PotentialFuture<T>> Callback(IFuture<T>? context)
+        public async Task<IFuture> Callback(IFuture<T>? context)
         {
             T? resolvedElement = context?.GetItem();
             if(resolvedElement != null&&_elementResolved != null)
             {
                 await _elementResolved(resolvedElement);
             }
-            return resolvedElement;
+            return context;
         }
 
         public bool DepedenciesResolved() => true;
