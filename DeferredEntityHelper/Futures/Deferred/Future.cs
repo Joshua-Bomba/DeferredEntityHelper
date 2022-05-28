@@ -106,6 +106,10 @@ namespace DeferredEntityHelper.Futures
                 {
                     return new IFutureEvent[] { this, ev };
                 }
+                else
+                {
+                    return new IFutureEvent[] { this };
+                }
             }
             return null;
         }
