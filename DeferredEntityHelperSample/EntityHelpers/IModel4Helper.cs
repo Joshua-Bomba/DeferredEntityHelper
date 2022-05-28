@@ -70,17 +70,20 @@ namespace DeferredEntityHelperSample.EntityHelpers
                     ASecondValue = secondValue
                 };
 
-                DependencyBridge<Model4> bridge = new DependencyBridge<Model4>();
-                FutureDetermined<Model4> m4Future = await this.AddEntityAsync(model,bridge);
-
-                return await this.WaitForPromises<Model1,Model4>(async x => {
+                DependencyBridge<Model4,Model1> bridge = new DependencyBridge<Model4,Model1>(async x => {
                     Model1 newM = new Model1
                     {
                         SomethingUnique = d,
                         Model4 = x
                     };
                     return await this.AddEntityAsync(newM);
-                },m4Future,bridge);
+                });
+                FutureDetermined<Model4> m4Future = await this.AddEntityAsync(model,bridge);
+
+                return await this.WaitForPromises<Model1,Model1>(async x =>
+                {
+                    return x;
+                }, bridge);
 
 
             }
