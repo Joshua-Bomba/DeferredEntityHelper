@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
+using DeferredEntityHelper.Futures.Callback;
 
 namespace DeferredEntityHelper
 {
@@ -17,15 +18,13 @@ namespace DeferredEntityHelper
             _lock = new AsyncLock();
         }
 
-
-        public override async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null)
+        public override async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, IFutureCallback<TProp> cb = null)
         {
-            using(await _lock.LockAsync())
+            using (await _lock.LockAsync())
             {
-                return await base.AddEntityAsync(e, actionPostSave);
+                return await base.AddEntityAsync(e, cb);
             }
         }
-
 
         public override async IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>(Func<IQueryable<TProp>,IQueryable<TProp>>? f = null)
         {

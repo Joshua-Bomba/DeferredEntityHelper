@@ -11,14 +11,26 @@ namespace DeferredEntityHelperSample
     [TestFixture]
     public class DependencyResolverTest
     {
-        public class MockFuture : IFuture<string>
+        public class MockFuture : MockFuture<string>
         {
-            public string Item { get; set; }
+
+        }
+        public class MockFuture<T> : IFuture<T> where T : class
+        {
+            public T? Item { get; set; }
             public bool Resolved { get; set; }
 
-            public string GetItem() => Item;
+            public T GetItem() => Item;
 
             object IFuture.GetItem() => GetItem();
+        }
+
+        public async ValueTask GetRelatedItemBeforeSave()
+        {
+            MockFuture mf = null;
+
+
+
         }
 
         public async ValueTask NonGenericParamWaitForPromiseTestAsync()
@@ -33,8 +45,6 @@ namespace DeferredEntityHelperSample
                 mf = new MockFuture();
 
                 await eh.WaitForPromises<string>(async () => "Resolved",mf);
-
-
             }
         }
 
