@@ -15,24 +15,25 @@ namespace DeferredEntityHelper.Futures
     {
         private Func<T, Task<IFuture>> _func;
         private IFuture _future;
+        private T? _resolvedElement;
         public DependencyBridge(Func<T, Task<IFuture>> func)
         {
             _func = func;
             _future = null;
         }
 
-        public bool Resolved => _future != null ?_future.Resolved : false;
+        bool IFuture.Resolved => _future != null ?_future.Resolved : false;
 
-        public object GetItem() => null;
+        object IFuture.GetItem() => _resolvedElement;
 
-        async Task<IFuture> IFutureCallback<T>.Callback(IFuture<T>? context)
+        async Task<PotentialFuture<T>> IFutureCallback<T>.Callback(IFuture<T>? context)
         {
-            T? resolvedElement = context?.GetItem();
-            if (resolvedElement != null && _func != null)
+            _resolvedElement = context?.GetItem();
+            if (_resolvedElement != null && _func != null)
             {
-                return await _func(resolvedElement);
+                _future = await _func(_resolvedElement);
             }
-            return context;
+            return _resolvedElement;
         }
 
         bool IFutureCallback<T>.DepedenciesResolved() => _future != null;
