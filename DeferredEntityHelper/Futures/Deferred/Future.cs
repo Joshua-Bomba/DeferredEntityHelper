@@ -13,7 +13,7 @@ namespace DeferredEntityHelper.Futures
         protected IFutureCallback<T> _futureCallback;
         protected bool _fullyResolved;
         protected bool _entityResolved;
-        protected PotentialFuture<T> _next;
+        protected IFuture _next;
         public Future(IFutureCallback<T> callback, IDependencyResolver dependencyResolver): base()
         {
             _fullyResolved = false;
@@ -47,37 +47,14 @@ namespace DeferredEntityHelper.Futures
             return null;
         }
 
-
-        protected virtual IEnumerable<IFutureEvent>? HandleNextElement(PotentialFuture<T> add)
-        {
-            _next = add;
-            if (add is IFutureEvent ev)
-            {
-                return new IFutureEvent[] { this, ev };
-            }
-            else
-            {
-                throw new NotSupportedException();
-            }
-        }
-
         protected virtual bool ProcessNextElement()
         {
             if (!_entityResolved)
                 return false;
-
             if (_next != null)
             {
-                if (_next.Resolved)
-                {
-                    UpdateModel(_next.GetItem());
-                    _fullyResolved = true;
-                    _next = null;
-                }
-                else
-                {
+                if (!FutureResolve(_next))
                     return false;
-                }
             }
             if (_futureCallback == null)
             {
@@ -86,6 +63,26 @@ namespace DeferredEntityHelper.Futures
             }
 
             return true;
+        }
+
+
+        protected bool FutureResolve(IFuture f)
+        {
+            if (f.Resolved)
+            {
+                if (f is IFuture<T> fWithITem)
+                {
+                    UpdateModel(fWithITem.GetItem());
+                }
+                _fullyResolved = true;
+                return true;
+            }
+            else
+            {
+                _next = f;
+                return false;
+            }
+
         }
 
 
@@ -101,16 +98,18 @@ namespace DeferredEntityHelper.Futures
             IEnumerable<IFutureEvent>? deps =  GetUnresolvedDepedencies();
             if (deps != null)
                 return deps;
-            PotentialFuture<T> p = await _futureCallback.Callback(this);
+            IFuture f = await _futureCallback.Callback(this);
             _futureCallback = null;
-            if (!p.Resolved)
+            if (!FutureResolve(f))
             {
-                return HandleNextElement(p);                
-            }
-            else
-            {
-                UpdateModel(p.GetItem());
-                _fullyResolved = true;
+                if (f is IFutureEvent ev)
+                {
+                    return new IFutureEvent[] { this, ev };
+                }
+                else
+                {
+                    return new IFutureEvent[] { this };
+                }
             }
             return null;
         }
