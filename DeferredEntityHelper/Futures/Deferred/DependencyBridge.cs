@@ -13,29 +13,33 @@ namespace DeferredEntityHelper.Futures
     /// <typeparam name="T"></typeparam>
     public class DependencyBridge<T> : IFutureCallback<T>, IFuture where T : class
     {
-        private bool _resolved;
-        private PotentialFuture<T> _f;
-        public DependencyBridge()
+        private Func<T, Task<IFuture>> _func;
+        private IFuture _future;
+        public DependencyBridge(Func<T, Task<IFuture>> func)
         {
-            _resolved = false;
+            _func = func;
+            _future = null;
         }
 
-        public bool Resolved => _resolved;
+        public bool Resolved => _future != null ?_future.Resolved : false;
 
-        public object GetItem() => _f;
+        public object GetItem() => null;
 
-        async Task<PotentialFuture<T>> IFutureCallback<T>.Callback(IFuture<T>? context)
+        async Task<IFuture> IFutureCallback<T>.Callback(IFuture<T>? context)
         {
             T? resolvedElement = context?.GetItem();
-            _resolved = true;
-            return resolvedElement;
+            if (resolvedElement != null && _func != null)
+            {
+                return await _func(resolvedElement);
+            }
+            return context;
         }
 
-        bool IFutureCallback<T>.DepedenciesResolved() => _resolved;
+        bool IFutureCallback<T>.DepedenciesResolved() => _future != null;
 
         IEnumerable<IFutureEvent> IFutureCallback<T>.GetUnResolvedElements()
         {
-            if(_f != null&&_f is IFutureEvent f)
+            if(_future != null&& _future is IFutureEvent f)
             {
                 yield return f;
             }
