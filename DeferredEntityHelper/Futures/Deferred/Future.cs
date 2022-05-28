@@ -51,10 +51,10 @@ namespace DeferredEntityHelper.Futures
         {
             if (!_entityResolved)
                 return false;
-
             if (_next != null)
             {
-                return FutureResolve(_next);
+                if (!FutureResolve(_next))
+                    return false;
             }
             if (_futureCallback == null)
             {
