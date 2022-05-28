@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DeferredEntityHelper.IndexedCachedModels;
+using DeferredEntityHelper.Futures.Callback;
 
 namespace DeferredEntityHelperSample.EntityHelpers
 {
@@ -68,16 +69,18 @@ namespace DeferredEntityHelperSample.EntityHelpers
                     Type = type,
                     ASecondValue = secondValue
                 };
-                FutureDetermined<Model4> m4Future = await this.AddEntityAsync(model);
 
-                return await this.WaitForPromises<Model1,Model4>(async x =>{
+                DependencyBridge<Model4> bridge = new DependencyBridge<Model4>();
+                FutureDetermined<Model4> m4Future = await this.AddEntityAsync(model,bridge);
+
+                return await this.WaitForPromises<Model1,Model4>(async x => {
                     Model1 newM = new Model1
                     {
                         SomethingUnique = d,
                         Model4 = x
                     };
                     return await this.AddEntityAsync(newM);
-                },m4Future);
+                },m4Future,bridge);
 
 
             }
