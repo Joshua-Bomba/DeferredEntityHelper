@@ -76,6 +76,32 @@ namespace DeferredEntityHelperSample
             }
         }
 
+        private async ValueTask TestCacheGetRelatedElementOutOfOrder()
+        {
+            using (SampleContext context = new SampleContext())
+            {
+                await using (EntityHelper eh = new EntityHelper(context))
+                {
+                    string org = "The Original Once Should be added and a new one should not be added again";
+                    //Create Model4 but don't Create Model1 yet
+                    PotentialFuture<Model4> a1 = await eh.Model4Helper.CreateModel4IfItDoesNotExist("TestCacheGetRelatedElement", org);
+                    //Get Model1 from cache it will not be yet added but it should wait for it to be resolved
+                    PotentialFuture<Model1> a2 = await eh.Model4Helper.CreateModel4IfItDoesNotExistAndReturnModel1Attached("TestCacheGetRelatedElement", "a new record should not be inserted because it already exists","Another Value");
+                    //let's add Model1 now
+                    PotentialFuture<Model1> t = await eh.WaitForPromises<Model1, Model4>(async x =>
+                     {
+                         Model1 m1 = new Model1
+                         {
+                             SomethingUnique = "It should be this one",
+                             Model4Id = x.Id
+                         };
+                         return await eh.AddEntityAsync(m1);
+                     },a1);
+
+                }
+            }
+        }
+
         private async ValueTask TestCache()
         {
             using (SampleContext context = new SampleContext())
@@ -138,6 +164,9 @@ namespace DeferredEntityHelperSample
         [Order(5)]
         [Test]
         public void ConcurrencyTest() => TestConcurreny().GetAwaiter().GetResult();
+        [Order(6)]
+        [Test]
+        public void CacheGetRelatedElementOutOfOrder() => TestCacheGetRelatedElementOutOfOrder().GetAwaiter().GetResult();
 
 
     }

@@ -25,6 +25,14 @@ namespace DeferredEntityHelperSample
             object IFuture.GetItem() => GetItem();
         }
 
+        public async ValueTask GetRelatedItemBeforeSave()
+        {
+            MockFuture mf = null;
+
+
+
+        }
+
         public async ValueTask NonGenericParamWaitForPromiseTestAsync()
         {
             MockFuture mf = null;
