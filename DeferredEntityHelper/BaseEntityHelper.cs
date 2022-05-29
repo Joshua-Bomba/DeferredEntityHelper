@@ -29,7 +29,10 @@ namespace DeferredEntityHelper
             _cacheManager = new EntityCacheManager(this);
         }
 
-        public virtual async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave = null) where TProp : class
+        public virtual async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, Func<TProp, Task> actionPostSave) where TProp : class
+            => await AddEntityAsync(e, new ResolvedCallbackHandler<TProp>(actionPostSave));
+
+        public virtual async Task<FutureDetermined<TProp>> AddEntityAsync<TProp>(TProp e, IFutureCallback<TProp> cb= null) where TProp : class
         {
             try
             {
@@ -40,7 +43,7 @@ namespace DeferredEntityHelper
                 ExceptionDispatchInfo.Capture(ex).Throw();
             }
 
-            FutureDetermined<TProp> det = this.AddUnresolvedElement(e, actionPostSave);
+            FutureDetermined<TProp> det = this.AddUnresolvedElement(e, cb);
             _cacheManager.NewEntityAdded(det);
             return det;
         }
@@ -61,9 +64,16 @@ namespace DeferredEntityHelper
             await SaveChangesAsync();
         }
 
-        public virtual IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>() where TProp : class
+        public virtual IAsyncEnumerator<TProp> GetAllEntitiesOfType<TProp>(Func<IQueryable<TProp>, IQueryable<TProp>>? f = null) where TProp : class
         {
-            return this.Context.Set<TProp>().GetAsyncEnumerator();
+            if(f != null)
+            {
+                return this.Context.Set<TProp>().GetAsyncEnumerator();
+            }
+            else
+            {
+                return f(this.Context.Set<TProp>()).AsAsyncEnumerable().GetAsyncEnumerator();
+            }
         }
     }
 }
