@@ -23,7 +23,7 @@ namespace DeferredEntityHelper.Futures
 
         bool IFuture.Resolved => _future != null ?_future.Resolved : false;
 
-        object IFuture.GetItem() => _resolvedElement;
+        object IFuture.GetItem() => GetItem();
 
         public U GetItem() => _future.GetItem();
 
@@ -34,7 +34,7 @@ namespace DeferredEntityHelper.Futures
             {
                 _future = await _func(_resolvedElement);
             }
-            return this;
+            return context;
         }
 
         bool IFutureCallback<T>.DepedenciesResolved() => true;
