@@ -37,7 +37,7 @@ namespace DeferredEntityHelper.Futures
             return this;
         }
 
-        bool IFutureCallback<T>.DepedenciesResolved() => _future != null;
+        bool IFutureCallback<T>.DepedenciesResolved() => true;
 
         IEnumerable<IFutureEvent> IFutureCallback<T>.GetUnResolvedElements()
         {
