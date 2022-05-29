@@ -12,7 +12,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
 {
     public interface IModel4Helper
     {
-        Task<PotentialFuture<Model4>> CreateModel4IfItDoesNotExist(string type, string secondValue);
+        Task<PotentialFuture<Model4>> CreateModel4IfItDoesNotExist(string type, string secondValue, IFutureCallback<Model4> test = null);
 
         Task<PotentialFuture<Model1>> CreateModel4IfItDoesNotExistAndReturnModel1Attached(string type, string secondValue, string d);
     }
@@ -24,7 +24,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
 
 
 
-        async Task<PotentialFuture<Model4>> IModel4Helper.CreateModel4IfItDoesNotExist(string type, string secondValue)
+        async Task<PotentialFuture<Model4>> IModel4Helper.CreateModel4IfItDoesNotExist(string type, string secondValue,IFutureCallback<Model4> test)
         {
             //First we check if the item is in the DataBase
             IFutureDetermined<Model4>? m4 = await this._cacheManager.GetCachedIndexedDictionary<string,Model4>(x=>x.Type).AtKey(type);
@@ -41,7 +41,15 @@ namespace DeferredEntityHelperSample.EntityHelpers
                 //this will wrap it in a DatabaseFutureDetermined
                 //this means we have access to the object via the GetUnresolvedItem() method
                 //this means we could pass this into something else and it can modify it before SaveChanges is called
-                return await this.AddEntityAsync(newM);
+                if(test == null)
+                {
+                    return await this.AddEntityAsync(newM);
+                }
+                else
+                {
+                    return await this.AddEntityAsync(newM, test);
+                }
+
 
             }
             else
