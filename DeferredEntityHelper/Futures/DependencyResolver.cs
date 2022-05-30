@@ -10,9 +10,11 @@ namespace DeferredEntityHelper.Futures
     public class DependencyResolver : IDependencyResolver
     {
         private HashSet<IFutureEvent> _def;
+        private HashSet<IFutureEvent> _lastLoop;
         public DependencyResolver()
         {
             _def = new HashSet<IFutureEvent>();
+            _lastLoop = null;
         }
 
         public virtual FutureDetermined<TProp> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
@@ -35,7 +37,19 @@ namespace DeferredEntityHelper.Futures
                 p.DependencyResolvedTrigger();
             foreach (IFutureEvent p in refs)
                 await p.Process();
-            return !_def.Any();
+            bool any = _def.Any();
+
+            if (any && _lastLoop == null)
+            {
+                _lastLoop = _def;
+                return false;
+            }
+            else if (any && _lastLoop != null && _def.SetEquals(_lastLoop))
+            {
+                throw new Exception("Dependency Not Resolved");
+            }
+            else
+                return true;
         }
 
         public virtual async Task TriggerResolves(Func<Task> resolveOperation)
