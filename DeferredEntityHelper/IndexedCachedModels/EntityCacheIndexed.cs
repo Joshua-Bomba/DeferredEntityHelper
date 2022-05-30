@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DeferredEntityHelper.IndexedCachedModels
 {
-    public class EntityCacheIndexed<TModel, TModelAccessKey> : Dictionary<TModelAccessKey, IFutureDetermined<TModel>>, IEntityCacheIndexed<TModel>, ICachedModelAccess<TModelAccessKey, TModel> where TModel : class where TModelAccessKey : notnull
+    public class EntityCacheIndexed<TModel, TModelAccessKey> : Dictionary<TModelAccessKey, IFutureDetermined<TModel>>, IEntityCacheIndexed<TModel>, ICachedModelAccess<TModelAccessKey, TModel> where TModel : class
     {
         private Func<TModel, TModelAccessKey> _keyGetter;
         private ValueTask _setupTask;
@@ -19,11 +19,20 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         private async ValueTask _SetupTask(IBaseEntityHelper context)
         {
+            //hmm were going to have to grab the expression from the constructor and add a null check that way 
+            //... or we can just check after we get the data back from the database <- this option seems like less work
             IAsyncEnumerator<TModel> en = context.GetAllEntitiesOfType<TModel>();
+            TModel c;
             while (await en.MoveNextAsync())
             {
-                
-                this[_keyGetter(en.Current)] = IFutureDetermined.Wrap(en.Current);
+                c = en.Current;
+                if(c != null)
+                {
+                    TModelAccessKey? tr = _keyGetter(c);
+                    if (tr != null)
+                        this[tr] = IFutureDetermined.Wrap(c);
+                }
+
             }
         }
 
@@ -35,7 +44,16 @@ namespace DeferredEntityHelper.IndexedCachedModels
 
         public void Add(IFutureDetermined<TModel> entity)
         {
-            this[_keyGetter(entity.GetItem())] = entity;
+            if(entity != null)
+            {
+                TModel? i = entity.GetItem();
+                if (i != null)
+                {
+                    TModelAccessKey? key = _keyGetter(i);
+                    if(key != null)
+                        this[key] = entity;
+                }
+            }
         }
 
         private async ValueTask _SetupCacheFromRelated(IEntityCacheIndexed<TModel> relatedSet)
@@ -43,7 +61,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             await relatedSet.Finished();
             foreach (IFutureDetermined<TModel> entity in relatedSet.GetData())
             {
-                this[_keyGetter(entity.GetItem())] = entity;
+                Add(entity);
             }
         }
 

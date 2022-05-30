@@ -21,7 +21,7 @@ namespace DeferredEntityHelper.IndexedCachedModels
             _contextTracking = contextTracking;
         }
 
-        public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer) where TKey : notnull
+        public async ValueTask<ICachedModelAccess<TKey, T>> GetByIndexer<TKey>(Func<T, TKey> indexer)
         {
             Type keyType = typeof(TKey);
 
@@ -55,9 +55,11 @@ namespace DeferredEntityHelper.IndexedCachedModels
             if (_cacheSets.Any())
             {
                 if(t is IFutureDetermined<T> prop)
-                foreach (KeyValuePair<Type, IEntityCacheIndexed<T>> kv in _cacheSets)
                 {
-                    kv.Value.Add(prop);
+                    foreach (KeyValuePair<Type, IEntityCacheIndexed<T>> kv in _cacheSets)
+                    {
+                        kv.Value.Add(prop);
+                    }
                 }
             }
         }
