@@ -21,7 +21,7 @@ namespace DeferredEntityHelper.Futures.Callback
             {
                 _e = items.ToList();
             }
-            else
+            else if(items.Any())
             {
                 _e.AddRange(items);
             }
