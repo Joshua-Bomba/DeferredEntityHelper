@@ -99,10 +99,7 @@ namespace DeferredEntityHelperSample
                     //Get Model1 from cache it will not be yet added but it should wait for it to be resolved
                     PotentialFuture<Model1> a2 = await eh.Model4Helper.CreateModel4IfItDoesNotExistAndReturnModel1Attached("TestCacheGetRelatedElement", "a new record should not be inserted because it already exists","Another Value");
                     //let's add Model1 now
-                    PotentialFuture<Model1> t = await eh.WaitForPromises<Model1, Model1>(async x =>
-                     {
-                         return x;
-                     }, bridge);
+                    await eh.WaitForPromises(bridge.WaitForCallback);
 
                 }
             }
