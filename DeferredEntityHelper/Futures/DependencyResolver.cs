@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Nito.AsyncEx;
 
 namespace DeferredEntityHelper.Futures
 {
@@ -11,22 +12,28 @@ namespace DeferredEntityHelper.Futures
     {
         private HashSet<IFutureEvent> _def;
         private HashSet<IFutureEvent> _lastLoop;
+        private AsyncLock _lock;
         public DependencyResolver()
         {
             _def = new HashSet<IFutureEvent>();
             _lastLoop = null;
+            _lock = new AsyncLock();
         }
 
-        public virtual FutureDetermined<TProp> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
+        public virtual async  Task<FutureDetermined<TProp>> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
         {
             FutureDetermined<TProp> save = new FutureDetermined<TProp>(el, callback, this);
-            _def.Add(save);
+            await AddUnresolvedElement(save);
             return save;
         }
 
-        public virtual void AddUnresolvedElement(IFutureEvent f)
+        public virtual async Task AddUnresolvedElement(IFutureEvent f)
         {
-            _def.Add(f);
+            using(await _lock.LockAsync())
+            {
+                _def.Add(f);
+            }
+            
         }
 
         public virtual async Task<bool> TriggerResolve()
@@ -66,7 +73,7 @@ namespace DeferredEntityHelper.Futures
             if (!callback.DepedenciesResolved())
             {
                 Future<TProp> save = new FutureUnDetermined<TProp>(callback, this);
-                this._def.Add(save);
+                await this.AddUnresolvedElement(save);
                 return save;
             }
 
