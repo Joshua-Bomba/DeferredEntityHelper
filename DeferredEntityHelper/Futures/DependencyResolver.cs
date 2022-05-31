@@ -5,19 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nito.AsyncEx;
+using System.Collections.Concurrent;
 
 namespace DeferredEntityHelper.Futures
 {
     public class DependencyResolver : IDependencyResolver
     {
-        private HashSet<IFutureEvent> _def;
-        private HashSet<IFutureEvent> _lastLoop;
-        private AsyncLock _lock;
+        private ConcurrentDictionary<IFutureEvent,byte> _def;
+        private ConcurrentDictionary<IFutureEvent,byte> _lastLoop;
+        private const byte NPTR = default;
         public DependencyResolver()
         {
-            _def = new HashSet<IFutureEvent>();
+            _def = new ConcurrentDictionary<IFutureEvent,byte>();
             _lastLoop = null;
-            _lock = new AsyncLock();
         }
 
         public virtual async  Task<FutureDetermined<TProp>> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
@@ -29,25 +29,21 @@ namespace DeferredEntityHelper.Futures
 
         public virtual async Task AddUnresolvedElement(IFutureEvent f)
         {
-            using(await _lock.LockAsync())
-            {
-                _def.Add(f);
-            }
-            
+            _def.TryAdd(f,NPTR);
         }
 
         public virtual async Task<bool> TriggerResolve()
         {
-            HashSet<IFutureEvent> refs = _def;
-            _def = new HashSet<IFutureEvent>();
-            foreach (IFutureEvent p in refs)
+            ConcurrentDictionary<IFutureEvent,byte> refs = _def;
+            _def = new ConcurrentDictionary<IFutureEvent,byte>();
+            foreach (IFutureEvent p in refs.Keys)
                 p.DependencyResolvedTrigger();
-            foreach (IFutureEvent p in refs)
+            foreach (IFutureEvent p in refs.Keys)
                 await p.Process();
             bool any = _def.Any();
 
 
-            if (any && _lastLoop != null && _def.SetEquals(_lastLoop))
+            if (any && _lastLoop != null && _def.Count == _lastLoop.Count)
             {
                 throw new Exception("Dependency Not Resolved");
             }
