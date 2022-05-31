@@ -43,7 +43,7 @@ namespace DeferredEntityHelper
                 ExceptionDispatchInfo.Capture(ex).Throw();
             }
 
-            FutureDetermined<TProp> det = this.AddUnresolvedElement(e, cb);
+            FutureDetermined<TProp> det = await this.AddUnresolvedElement(e, cb);
             _cacheManager.NewEntityAdded(det);
             return det;
         }
