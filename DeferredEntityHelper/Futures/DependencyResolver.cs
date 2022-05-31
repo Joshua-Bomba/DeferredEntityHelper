@@ -20,10 +20,10 @@ namespace DeferredEntityHelper.Futures
             _lock = new AsyncLock();
         }
 
-        public virtual FutureDetermined<TProp> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
+        public virtual async  Task<FutureDetermined<TProp>> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
         {
             FutureDetermined<TProp> save = new FutureDetermined<TProp>(el, callback, this);
-            _def.Add(save);
+            await AddUnresolvedElement(save);
             return save;
         }
 

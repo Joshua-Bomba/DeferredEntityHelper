@@ -12,7 +12,7 @@ namespace DeferredEntityHelper.Futures
         Task<bool> TriggerResolve();
 
         Task TriggerResolves(Func<Task> resolveOperation);
-        FutureDetermined<TProp> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class;
+        Task<FutureDetermined<TProp>> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class;
         Task AddUnresolvedElement(IFutureEvent f);
         Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class;
     }
