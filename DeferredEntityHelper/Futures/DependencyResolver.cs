@@ -73,7 +73,7 @@ namespace DeferredEntityHelper.Futures
             if (!callback.DepedenciesResolved())
             {
                 Future<TProp> save = new FutureUnDetermined<TProp>(callback, this);
-                this._def.Add(save);
+                await this.AddUnresolvedElement(save);
                 return save;
             }
 
