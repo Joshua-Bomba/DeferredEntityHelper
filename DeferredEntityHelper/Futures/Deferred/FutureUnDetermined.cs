@@ -33,12 +33,12 @@ namespace DeferredEntityHelper.Futures
                 }
                 else
                 {
-                    this._dependencyResolver.AddUnresolvedElement(this);
+                    await this._dependencyResolver.AddUnresolvedElement(this);
                 }
             }
             else if (!_callback.DepedenciesResolved())
             {
-                this._dependencyResolver.AddUnresolvedElement(this);//we will have it go around again till the promises we are waiting on are resolved
+                await this._dependencyResolver.AddUnresolvedElement(this);//we will have it go around again till the promises we are waiting on are resolved
             }
             else
             {
@@ -47,7 +47,7 @@ namespace DeferredEntityHelper.Futures
                 if (!p.Resolved)
                 {
                     _next = p;
-                    this._dependencyResolver.AddUnresolvedElement(this);
+                    await this._dependencyResolver.AddUnresolvedElement(this);
                 }
                 else
                 {
