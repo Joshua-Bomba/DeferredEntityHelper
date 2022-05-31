@@ -16,10 +16,16 @@ namespace DeferredEntityHelper.Futures
         private Func<T, Task<PotentialFuture<U>>> _func;
         private PotentialFuture<U> _future;
         private T? _resolvedElement;
+        private WaitForResolve _waitForCallback;
+       
+
         public DependencyBridge(Func<T, Task<PotentialFuture<U>>> func)
         {
             _func = func;
+            _waitForCallback = null;
         }
+
+        public IFutureCallback<U> WaitForCallback => _waitForCallback ??= new WaitForResolve(this);
 
         bool IFuture.Resolved => _future != null ?_future.Resolved : false;
 
@@ -38,5 +44,18 @@ namespace DeferredEntityHelper.Futures
         }
 
         bool IFutureCallback<T>.DepedenciesResolved() => true;
+
+        private class WaitForResolve : IFutureCallback<U>
+        {
+            private DependencyBridge<T, U> _parent;
+            public WaitForResolve(DependencyBridge<T, U> parent)
+            {
+                _parent = parent;
+
+            }
+            bool IFutureCallback<U>.DepedenciesResolved() => _parent._future != null ? _parent._future.Resolved : false;
+
+            async Task<PotentialFuture<U>> IFutureCallback<U>.Callback(IFuture<U>? context) => _parent._future;
+        }
     }
 }

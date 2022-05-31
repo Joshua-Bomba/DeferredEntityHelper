@@ -39,14 +39,15 @@ namespace DeferredEntityHelper.Futures
                 await p.Process();
             bool any = _def.Any();
 
-            if (any && _lastLoop == null)
+
+            if (any && _lastLoop != null && _def.SetEquals(_lastLoop))
+            {
+                throw new Exception("Dependency Not Resolved");
+            }
+            else if(any)
             {
                 _lastLoop = _def;
                 return false;
-            }
-            else if (any && _lastLoop != null && _def.SetEquals(_lastLoop))
-            {
-                throw new Exception("Dependency Not Resolved");
             }
             else
                 return true;

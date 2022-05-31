@@ -41,16 +41,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
                 //this will wrap it in a DatabaseFutureDetermined
                 //this means we have access to the object via the GetUnresolvedItem() method
                 //this means we could pass this into something else and it can modify it before SaveChanges is called
-                if(test == null)
-                {
-                    return await this.AddEntityAsync(newM);
-                }
-                else
-                {
-                    return await this.AddEntityAsync(newM, test);
-                }
-
-
+                return await this.AddEntityAsync(newM, test);
             }
             else
             {
@@ -88,12 +79,7 @@ namespace DeferredEntityHelperSample.EntityHelpers
                 });
                 FutureDetermined<Model4> m4Future = await this.AddEntityAsync(model,bridge);
 
-                return await this.WaitForPromises<Model1,Model1>(async x =>
-                {
-                    return x;
-                }, bridge);
-
-
+                return await this.WaitForPromises(bridge.WaitForCallback);
             }
         }
     }
