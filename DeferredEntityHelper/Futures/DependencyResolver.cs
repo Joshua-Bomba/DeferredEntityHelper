@@ -43,7 +43,7 @@ namespace DeferredEntityHelper.Futures
             bool any = _def.Any();
 
 
-            if (any && _lastLoop != null && _def.Count == _lastLoop.Count)
+            if (any && _lastLoop != null && _def.Count == _lastLoop.Count&&_def.All(x=>_lastLoop.ContainsKey(x.Key)))
             {
                 throw new Exception("Dependency Not Resolved");
             }
