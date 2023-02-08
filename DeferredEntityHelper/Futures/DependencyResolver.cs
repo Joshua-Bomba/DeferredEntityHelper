@@ -11,7 +11,7 @@ namespace DeferredEntityHelper.Futures
     public class DependencyResolver : IDependencyResolver
     {
         private HashSet<IFutureEvent> _def;
-        private HashSet<IFutureEvent> _lastLoop;
+        private HashSet<IFutureEvent>? _lastLoop;
         private AsyncLock _lock;
         public DependencyResolver()
         {
@@ -57,7 +57,11 @@ namespace DeferredEntityHelper.Futures
                 return false;
             }
             else
+            {
+                _lastLoop = null;
                 return true;
+            }
+                
         }
 
         public virtual async Task TriggerResolves(Func<Task> resolveOperation)
