@@ -13,11 +13,13 @@ namespace DeferredEntityHelper.Futures
         private HashSet<IFutureEvent> _def;
         private HashSet<IFutureEvent>? _lastLoop;
         private AsyncLock _lock;
+        private AsyncLock _depResLock;
         public DependencyResolver()
         {
             _def = new HashSet<IFutureEvent>();
             _lastLoop = null;
             _lock = new AsyncLock();
+            _depResLock = new AsyncLock();
         }
 
         public virtual async  Task<FutureDetermined<TProp>> AddUnresolvedElement<TProp>(TProp el, IFutureCallback<TProp> callback) where TProp : class
@@ -66,10 +68,13 @@ namespace DeferredEntityHelper.Futures
 
         public virtual async Task TriggerResolves(Func<Task> resolveOperation)
         {
-            do
+            using(await _depResLock.LockAsync())
             {
-                await resolveOperation();
-            }while(!await TriggerResolve());
+                do
+                {
+                    await resolveOperation();
+                } while (!await TriggerResolve());
+            }
         }
 
         public virtual async Task<PotentialFuture<TProp>> WaitForPromises<TProp>(IFutureCallback<TProp> callback) where TProp : class
